@@ -1,3 +1,10 @@
+"""
+.. module:: lgx_rg
+    :synopsis: Provides routines to construct a Linear Regression.
+
+.. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
+"""
+
 from numpy import zeros, float64
 from numpy.linalg import inv, LinAlgError
 
