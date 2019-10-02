@@ -472,10 +472,10 @@ class TestNeuralNetwork():
         theta = init_nn_weights(input_layer_size, hidden_layer_size,
                                 num_labels, n_hidden_layers)
 
-        self.assertEqual(theta[0].shape, (5, 4))
-        self.assertEqual(theta[1].shape, (5, 6))
-        self.assertEqual(theta[2].shape, (3, 6))
-        self.assertEqual(len(theta), (n_hidden_layers + 1))
+        assert theta[0].shape == (5, 4)
+        assert theta[1].shape == (5, 6)
+        assert theta[2].shape == (3, 6)
+        assert len(theta) == n_hidden_layers + 1
 
     def test_init_nn_weights2(self):
         num_labels = 10
@@ -486,13 +486,13 @@ class TestNeuralNetwork():
         theta = init_nn_weights(input_layer_size, hidden_layer_size,
                                 num_labels, n_hidden_layers)
 
-        self.assertEqual(theta[0].shape, (25, 51))
-        self.assertEqual(theta[1].shape, (25, 26))
-        self.assertEqual(theta[2].shape, (25, 26))
-        self.assertEqual(theta[3].shape, (25, 26))
-        self.assertEqual(theta[4].shape, (25, 26))
-        self.assertEqual(theta[5].shape, (10, 26))
-        self.assertEqual(len(theta), (n_hidden_layers + 1))
+        assert theta[0].shape == (25, 51)
+        assert theta[1].shape == (25, 26)
+        assert theta[2].shape == (25, 26)
+        assert theta[3].shape == (25, 26)
+        assert theta[4].shape == (25, 26)
+        assert theta[5].shape == (10, 26)
+        assert len(theta) == n_hidden_layers + 1
 
     def test_unravel_params1(self):
         num_labels = 3
@@ -511,9 +511,9 @@ class TestNeuralNetwork():
         inflated = unravel_params(flat, input_layer_size, hidden_layer_size,
                                   num_labels, n_hidden_layers)
 
-        self.assertEqual(inflated[0].shape, theta[0].shape)
-        self.assertEqual(inflated[1].shape, theta[1].shape)
-        self.assertEqual(len(inflated), (n_hidden_layers + 1))
+        assert inflated[0].shape == theta[0].shape
+        assert inflated[1].shape == theta[1].shape
+        assert len(inflated) == n_hidden_layers + 1
 
     def test_unravel_params2(self):
         num_labels = 3
@@ -535,10 +535,10 @@ class TestNeuralNetwork():
         inflated = unravel_params(flat, input_layer_size, hidden_layer_size,
                                   num_labels, n_hidden_layers)
 
-        self.assertEqual(inflated[0].shape, theta[0].shape)
-        self.assertEqual(inflated[1].shape, theta[1].shape)
-        self.assertEqual(inflated[2].shape, theta[2].shape)
-        self.assertEqual(len(inflated), (n_hidden_layers + 1))
+        assert inflated[0].shape == theta[0].shape
+        assert inflated[1].shape == theta[1].shape
+        assert inflated[2].shape == theta[2].shape
+        assert len(inflated) == n_hidden_layers + 1
 
     def test_unravel_params3(self):
         num_labels = 10
@@ -569,10 +569,10 @@ class TestNeuralNetwork():
         inflated = unravel_params(flat, input_layer_size, hidden_layer_size,
                                   num_labels, n_hidden_layers)
 
-        self.assertEqual(inflated[0].shape, theta[0].shape)
-        self.assertEqual(inflated[1].shape, theta[1].shape)
-        self.assertEqual(inflated[2].shape, theta[2].shape)
-        self.assertEqual(inflated[3].shape, theta[3].shape)
-        self.assertEqual(inflated[4].shape, theta[4].shape)
-        self.assertEqual(inflated[5].shape, theta[5].shape)
-        self.assertEqual(len(inflated), (n_hidden_layers + 1))
+        assert inflated[0].shape == theta[0].shape
+        assert inflated[1].shape == theta[1].shape
+        assert inflated[2].shape == theta[2].shape
+        assert inflated[3].shape == theta[3].shape
+        assert inflated[4].shape == theta[4].shape
+        assert inflated[5].shape == theta[5].shape
+        assert len(inflated) == n_hidden_layers + 1
