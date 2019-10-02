@@ -14,7 +14,7 @@ TESTDATA1 = os.path.join(os.path.dirname(__file__), 'data1.csv')
 TESTDATA2 = os.path.join(os.path.dirname(__file__), 'data2.csv')
 
 
-class TestLinearRegression():
+class TestLinearRegression:
 
     @pytest.fixture
     def data1(self):

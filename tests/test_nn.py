@@ -8,7 +8,7 @@ from ml_algorithms.nn import (feed_forward, init_nn_weights,
                               grad, unravel_params)
 
 
-class TestNeuralNetwork():
+class TestNeuralNetwork:
     
     @pytest.fixture
     def omicron(self):
