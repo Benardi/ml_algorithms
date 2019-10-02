@@ -1,7 +1,6 @@
-import pytest
 import os
 
-
+import pytest
 from numpy.testing import assert_allclose
 from numpy import ones, zeros, float64, array, append, genfromtxt
 
@@ -19,7 +18,7 @@ class TestLinearRegression:
     @pytest.fixture(scope="module")
     def data1(self):
         return genfromtxt(TESTDATA1, delimiter=',')
-        
+
     @pytest.fixture(scope="module")
     def data2(self):
         return genfromtxt(TESTDATA2, delimiter=',')
@@ -32,6 +31,7 @@ class TestLinearRegression:
 # NORMAL EQUATION
 
     def test_normal_eqn_data1(self, data1):
+
         y = data1[:, -1:]
         X = data1[:, :-1]
         m, n = X.shape

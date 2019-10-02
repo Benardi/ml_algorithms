@@ -1,6 +1,6 @@
 from math import radians
-import pytest
 
+import pytest
 from numpy import array, cos, sin, exp
 from numpy.testing import assert_allclose
 

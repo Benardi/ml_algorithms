@@ -1,5 +1,4 @@
 import pytest
-
 from numpy import array, append, empty, zeros, int64
 from numpy.testing import assert_allclose
 
@@ -9,7 +8,7 @@ from ml_algorithms.nn import (feed_forward, init_nn_weights,
 
 
 class TestNeuralNetwork:
-    
+
     @pytest.fixture(scope="module")
     def omicron(self):
         return array([[0.35, 0.78, 0.13, 0.90],
@@ -17,13 +16,13 @@ class TestNeuralNetwork:
                       [0.64, 0.36, 0.76, 0.33],
                       [0.00, 0.70, 0.78, 0.85],
                       [0.55, 0.72, 0.24, 0.43]])
-    
+
     @pytest.fixture(scope="module")
     def omega(self):
         return array([[0.86, 0.77, 0.63, 0.35, 0.99, 0.11],
                       [0.84, 0.74, 0.11, 0.30, 0.49, 0.14],
                       [0.04, 0.31, 0.17, 0.65, 0.28, 0.99]])
-    
+
     @pytest.fixture(scope="module")
     def kappa(self):
         return array([[0.98, 0.6, 0.18, 0.47, 0.07, 1],
@@ -31,7 +30,7 @@ class TestNeuralNetwork:
                       [0.57, 0.23, 0.41, 0.45, 0.04, 0.24],
                       [0.46, 0.94, 0.03, 0.06, 0.19, 0.63],
                       [0.87, 0.4, 0.85, 0.07, 0.81, 0.76]])
-    
+
     @pytest.fixture(scope="module")
     def upsilon(self):
         return array([[0.9, 0.95, 0.05, 0.05, 0.65, 0.11],
@@ -39,19 +38,19 @@ class TestNeuralNetwork:
                       [0.36, 0.6, 0.54, 0.49, 0.3, 0.03],
                       [0.11, 0.49, 0.71, 0.43, 0.01, 0.92],
                       [0.02, 0.01, 0.94, 0.35, 0.69, 0.88]])
-    
+
     @pytest.fixture(scope="module")
     def zeta(self):
         return array([[0.91672, 0.85806, 0.81484],
                       [0.89115, 0.83518, 0.78010],
                       [0.93880, 0.88464, 0.84335]])
-    
+
     @pytest.fixture(scope="module")
     def iota(self):
         return array([[0.017, 0.422, 0.739, -0.121, 0.479],
                       [-0.346, 0.018, 0.37, -0.65, 0.148],
                       [0.781, 0.484, 0.9405, 0.5385, 0.7915]])
-    
+
     def test_cost_function1(self, omicron, omega):
         X = array([[0.10, 0.30, -0.50], [-0.20, 0, -0.60], [0, 0.20, 0.45]])
         y = array([[0], [2], [1]])

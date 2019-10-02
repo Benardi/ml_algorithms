@@ -1,6 +1,6 @@
-import pytest
 import os
 
+import pytest
 from numpy import ones, zeros, float64, array, append, isclose, genfromtxt
 from numpy.testing import assert_allclose
 
@@ -18,7 +18,7 @@ class TestLogisticRegression:
     @pytest.fixture(scope="module")
     def data3(self):
         return genfromtxt(TESTDATA3, delimiter=',')
-        
+
     @pytest.fixture(scope="module")
     def data4(self):
         return genfromtxt(TESTDATA4, delimiter=',')
@@ -31,6 +31,7 @@ class TestLogisticRegression:
 # COST FUNCTION
 
     def test_cost_func_data3_1(self, data3):
+
         y = data3[:, -1:]
         X = data3[:, :-1]
         m, n = X.shape
@@ -478,4 +479,3 @@ class TestLogisticRegression:
         theta = array([[5.161], [0.206], [0.201]])
 
         assert not predict(X, theta)
-    
