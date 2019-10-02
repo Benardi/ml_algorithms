@@ -13,11 +13,7 @@ class TestLogisticRegression:
     def err(self):
         return 0.0001
 
-    @pytest.fixture
-    def atol(self):
-        return 0.001
-
-    def test_numeric_grad_1(self, err, atol):
+    def test_numeric_grad_1(self, err):
         def J(x):
             return sum(3 * (x ** 2))
 
@@ -25,9 +21,9 @@ class TestLogisticRegression:
 
         assert_allclose(array([[0], [24], [60]]),
                         numerical_grad(J, theta, err),
-                        rtol=0, atol=atol, equal_nan=False)
+                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_numeric_grad_2(self, err, atol):
+    def test_numeric_grad_2(self, err):
         def J(x):
             return sum(1 / x)
 
@@ -35,9 +31,9 @@ class TestLogisticRegression:
 
         assert_allclose(array([[-0.04], [-0.015625], [-0.0025]]),
                         numerical_grad(J, theta, err),
-                        rtol=0, atol=atol, equal_nan=False)
+                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_numeric_grad_3(self, err, atol):
+    def test_numeric_grad_3(self, err):
         def J(x):
             return sum(cos(x))
 
@@ -51,9 +47,9 @@ class TestLogisticRegression:
                                [-sin(radians(60))],
                                [-sin(radians(90))]]),
                         numerical_grad(J, theta, err),
-                        rtol=0, atol=atol, equal_nan=False)
+                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_numeric_grad_4(self, err, atol):
+    def test_numeric_grad_4(self, err):
         def J(x):
             return sum(exp(x))
 
@@ -65,9 +61,9 @@ class TestLogisticRegression:
                                [exp(1)],
                                [exp(10)]]),
                         numerical_grad(J, theta, err),
-                        rtol=0, atol=atol, equal_nan=False)
+                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_numeric_grad_5(self, err, atol):
+    def test_numeric_grad_5(self, err):
         def J(x):
             return sum(7 * x)
 
@@ -79,10 +75,10 @@ class TestLogisticRegression:
                                [7],
                                [7]]),
                         numerical_grad(J, theta, err),
-                        rtol=0, atol=atol, equal_nan=False)
+                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_sigmoid_gradient(self, atol):
+    def test_sigmoid_gradient(self):
         z = array([-1, -0.5, 0, 0.5, 1])
         assert_allclose(g_grad(z),
                         [0.196612, 0.235004, 0.25, 0.235004, 0.196612],
-                        rtol=0, atol=atol, equal_nan=False)
+                        rtol=0, atol=0.001, equal_nan=False)
