@@ -15,15 +15,15 @@ TESTDATA4 = os.path.join(os.path.dirname(__file__), 'data4.csv')
 
 class TestLogisticRegression:
 
-    @pytest.fixture
+    @pytest.fixture(scope="module")
     def data3(self):
         return genfromtxt(TESTDATA3, delimiter=',')
         
-    @pytest.fixture
+    @pytest.fixture(scope="module")
     def data4(self):
         return genfromtxt(TESTDATA4, delimiter=',')
 
-    @pytest.fixture
+    @pytest.fixture(scope="module")
     def err(self):
         return 1e-4
 

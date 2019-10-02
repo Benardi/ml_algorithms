@@ -16,15 +16,15 @@ TESTDATA2 = os.path.join(os.path.dirname(__file__), 'data2.csv')
 
 class TestLinearRegression:
 
-    @pytest.fixture
+    @pytest.fixture(scope="module")
     def data1(self):
         return genfromtxt(TESTDATA1, delimiter=',')
         
-    @pytest.fixture
+    @pytest.fixture(scope="module")
     def data2(self):
         return genfromtxt(TESTDATA2, delimiter=',')
 
-    @pytest.fixture
+    @pytest.fixture(scope="module")
     def err(self):
         return 1e-4
 

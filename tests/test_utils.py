@@ -9,7 +9,7 @@ from ml_algorithms.utils import numerical_grad, g_grad
 
 class TestLogisticRegression:
 
-    @pytest.fixture
+    @pytest.fixture(scope="module")
     def err(self):
         return 0.0001
 
