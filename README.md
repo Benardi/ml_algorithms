@@ -83,9 +83,13 @@ To execute only the coding style tests, run
 tox -e pep8
 ``` 
 
+## Contributing
+
+Please read [CONTRIBUTING.md](https://github.com/Benardi/ml_algorithms/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
 ## Versioning
 
-We use [Git](https://git-scm.com) for versioning. For the versions available, see the [tags on this repository](https://github.com/Benardi/ml_algorithms/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/Benardi/ml_algorithms/tags). 
 
 ## Authors
 
