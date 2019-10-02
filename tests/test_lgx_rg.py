@@ -1,4 +1,4 @@
-import unittest
+import pytest
 import os
 
 from numpy import ones, zeros, float64, array, append, isclose, genfromtxt
@@ -13,21 +13,27 @@ TESTDATA3 = os.path.join(os.path.dirname(__file__), 'data3.csv')
 TESTDATA4 = os.path.join(os.path.dirname(__file__), 'data4.csv')
 
 
-class TestLogisticRegression(unittest.TestCase):
+class TestLogisticRegression:
 
-    @classmethod
-    def setUpClass(cls):
-        cls.data3 = genfromtxt(TESTDATA3, delimiter=',')
-        cls.data4 = genfromtxt(TESTDATA4, delimiter=',')
-        cls.err = 1e-4
+    @pytest.fixture
+    def data3():
+        return genfromtxt(TESTDATA3, delimiter=',')
+        
+    @pytest.fixture
+    def data4():
+        return genfromtxt(TESTDATA4, delimiter=',')
+
+    @pytest.fixture
+    def err():
+        return 1e-4
 
 
 # COST FUNCTION
 
-    def test_cost_func_data3_1(self):
+    def test_cost_func_data3_1(data3):
 
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -36,9 +42,9 @@ class TestLogisticRegression(unittest.TestCase):
         assert isclose(0.693, cost_func(X, y, theta),
                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_cost_func_data3_2(self):
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+    def test_cost_func_data3_2(data3):
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, _ = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -47,9 +53,9 @@ class TestLogisticRegression(unittest.TestCase):
         assert isclose(4.227, cost_func(X, y, theta),
                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_cost_func_data3_3(self):
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+    def test_cost_func_data3_3(data3):
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -58,9 +64,9 @@ class TestLogisticRegression(unittest.TestCase):
         assert isclose(0.218, cost_func(X, y, theta),
                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_cost_func_data4_1(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_cost_func_data4_1(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -69,9 +75,9 @@ class TestLogisticRegression(unittest.TestCase):
         assert isclose(0.693, cost_func(X, y, theta),
                        rtol=0, atol=0.001, equal_nan=False)
 
-    def test_cost_func_data4_2(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_cost_func_data4_2(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -82,9 +88,9 @@ class TestLogisticRegression(unittest.TestCase):
                         cost_func(X, y, theta),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_cost_func_data4_3(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_cost_func_data4_3(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -96,9 +102,9 @@ class TestLogisticRegression(unittest.TestCase):
 
 # REGULARIZED COST FUNCTION
 
-    def test_reg_cost_func_data4_1(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_cost_func_data4_1(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -109,9 +115,9 @@ class TestLogisticRegression(unittest.TestCase):
                         reg_cost_func(X, y, theta, _lambda),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_reg_cost_func_data4_2(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_cost_func_data4_2(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -122,9 +128,9 @@ class TestLogisticRegression(unittest.TestCase):
                         reg_cost_func(X, y, theta, _lambda),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_reg_cost_func_data4_3(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_cost_func_data4_3(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -137,9 +143,9 @@ class TestLogisticRegression(unittest.TestCase):
 
 # GRADIENT
 
-    def test_grad_data3_1(self):
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+    def test_grad_data3_1(data3):
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -149,9 +155,9 @@ class TestLogisticRegression(unittest.TestCase):
                         grad(X, y, theta), rtol=0, atol=5e-05,
                         equal_nan=False)
 
-    def test_grad_data3_2(self):
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+    def test_grad_data3_2(data3):
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, _ = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -161,9 +167,9 @@ class TestLogisticRegression(unittest.TestCase):
                         grad(X, y, theta), rtol=0, atol=0.001,
                         equal_nan=False)
 
-    def test_grad_data3_3(self):
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+    def test_grad_data3_3(data3):
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -173,10 +179,9 @@ class TestLogisticRegression(unittest.TestCase):
                         grad(X, y, theta), rtol=0, atol=0.001,
                         equal_nan=False)
 
-    def test_grad_data3_4(self):
-
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+    def test_grad_data3_4(data3):
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -189,10 +194,9 @@ class TestLogisticRegression(unittest.TestCase):
                         numerical_grad(J, theta, self.err),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad_data3_5(self):
-
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+    def test_grad_data3_5(data3):
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, _ = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -205,10 +209,9 @@ class TestLogisticRegression(unittest.TestCase):
                         numerical_grad(J, theta, self.err),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad_data3_6(self):
-
-        y = self.data3[:, -1:]
-        X = self.data3[:, :-1]
+    def test_grad_data3_6(data3):
+        y = data3[:, -1:]
+        X = data3[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -221,9 +224,9 @@ class TestLogisticRegression(unittest.TestCase):
                         numerical_grad(J, theta, self.err),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad_data4_1(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_grad_data4_1(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -234,9 +237,9 @@ class TestLogisticRegression(unittest.TestCase):
                         grad(X, y, theta),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad_data4_2(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_grad_data4_2(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, _ = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -249,9 +252,9 @@ class TestLogisticRegression(unittest.TestCase):
                         grad(X, y, theta),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad_data4_3(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_grad_data4_3(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -263,9 +266,9 @@ class TestLogisticRegression(unittest.TestCase):
                         grad(X, y, theta),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad_data4_4(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_grad_data4_4(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -278,9 +281,9 @@ class TestLogisticRegression(unittest.TestCase):
                         numerical_grad(J, theta, self.err),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad_data4_5(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_grad_data4_5(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, _ = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -294,9 +297,9 @@ class TestLogisticRegression(unittest.TestCase):
                         numerical_grad(J, theta, self.err),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad_data4_6(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_grad_data4_6(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -311,9 +314,9 @@ class TestLogisticRegression(unittest.TestCase):
 
 # REGULARIZED GRADIENT
 
-    def test_reg_grad_data4_1(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_grad_data4_1(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -326,9 +329,9 @@ class TestLogisticRegression(unittest.TestCase):
                         reg_grad(X, y, theta, _lambda),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_reg_grad_data4_2(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_grad_data4_2(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -341,9 +344,9 @@ class TestLogisticRegression(unittest.TestCase):
                         reg_grad(X, y, theta, _lambda),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_reg_grad_data4_3(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_grad_data4_3(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -358,9 +361,9 @@ class TestLogisticRegression(unittest.TestCase):
                         reg_grad(X, y, theta, _lambda),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_reg_grad_data4_4(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_grad_data4_4(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -374,9 +377,9 @@ class TestLogisticRegression(unittest.TestCase):
                         numerical_grad(J, theta, self.err),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_reg_grad_data4_5(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_grad_data4_5(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
@@ -390,9 +393,9 @@ class TestLogisticRegression(unittest.TestCase):
                         numerical_grad(J, theta, self.err),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_reg_grad_data4_6(self):
-        y = self.data4[:, -1:]
-        X = self.data4[:, :-1]
+    def test_reg_grad_data4_6(data4):
+        y = data4[:, -1:]
+        X = data4[:, :-1]
         m, n = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
