@@ -207,6 +207,33 @@ class TestNeuralNetwork:
                         array([[-0.346, 0.018, 0.37, -0.65, 0.148]]),
                         rtol=0, atol=0.001, equal_nan=False)
 
+    def test_feed_forward2(self, omicron, omega):
+        n_hidden_layers = 1
+        X = array([[1, -0.2, 0, -0.6]])
+
+        theta = empty((n_hidden_layers + 1), dtype=object)
+        theta[0] = omicron
+        theta[1] = omega
+
+        z, a = feed_forward(X, theta, n_hidden_layers)
+
+        assert_allclose(a[0],
+                        array([[1, -0.2, 0, -0.6]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(a[1],
+                        array([[1, 0.41435, 0.5045, 0.59146,
+                                0.34299, 0.53693]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(a[2],
+                        array([[0.89115, 0.83518, 0.78010]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(z[1],
+                        array([[-0.346, 0.018, 0.37, -0.65, 0.148]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
     def test_feed_forward3(self, omicron, omega):
         n_hidden_layers = 1
         X = array([[1, 0, 0.2, 0.45]])
@@ -279,6 +306,82 @@ class TestNeuralNetwork:
                         array([[3.4772, 2.4749, 2.2417]]),
                         rtol=0, atol=0.001, equal_nan=False)
 
+    def test_feed_forward5(self, omicron, omega):
+        n_hidden_layers = 1
+        X = array([[1, -0.2, 0, -0.6]])
+
+        theta = empty((n_hidden_layers + 1), dtype=object)
+        theta[0] = omicron
+        theta[1] = omega
+
+        z, a = feed_forward(X, theta, n_hidden_layers, activation='relu')
+
+        assert_allclose(a[0],
+                        array([[1, -0.2, 0, -0.6]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(a[1],
+                        array([[1., 0., 0.018, 0.37,
+                                0., 0.148]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(a[2],
+                        array([[1.01712, 0.9737 , 0.43008]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(z[1],
+                        array([[-0.346, 0.018, 0.37, -0.65, 0.148]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(z[2],
+                        array([[1.01712, 0.9737, 0.43008]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+    def test_feed_forward6(self, omicron, omega, kappa, upsilon):
+        n_hidden_layers = 3
+
+        X = array([[1, 0, 0.2, 0.45]])
+        theta = empty((n_hidden_layers + 1), dtype=object)
+
+        theta[0] = omicron
+        theta[1] = kappa
+        theta[2] = upsilon
+        theta[3] = omega
+
+        z, a = feed_forward(X, theta, n_hidden_layers, activation='tanh')
+
+        assert_allclose(a[0],
+                        array([[1, 0, 0.2, 0.45]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(a[1],
+                        array([[1., 0.65328031, 0.44944135,
+                                0.73545189, 0.49185168, 0.65925794]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(a[2],
+                        array([[1., 0.98640575, 0.98367256, 0.88820863,
+                                0.92753938, 0.98562944]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(a[3],
+                        array([[1., 0.98990698, 0.98740503, 0.97696172,
+                                0.98880098, 0.99222033]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(a[4],
+                        array([[0.99871381, 0.98897616, 0.98396112]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(z[1],
+                        array([[0.781, 0.484, 0.9405, 0.5385, 0.7915]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(z[2],
+                        array([[2.49221758, 2.39992904, 1.41337475, 1.64047817, 2.4642548]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(z[3],
+                        array([[2.64199936, 2.53064393, 2.22607956, 2.58973053, 2.77274537]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(z[4],
+                        array([[3.67428735, 2.59765756, 2.40891753]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
     def test_hypothesis1(self, omicron, omega):
         n_hidden_layers = 1
         X = array([[1, 0.10, 0.30, -0.50]])
@@ -334,6 +437,35 @@ class TestNeuralNetwork:
 
         assert_allclose(_h,
                         array([[0.97003, 0.92236, 0.90394]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+
+    def test_hypothesis5(self, omicron, kappa, upsilon):
+        n_hidden_layers = 2
+        X = array([[1, 0, 0.2, 0.45]])
+        theta = empty((n_hidden_layers + 1), dtype=object)
+
+        theta[0] = omicron
+        theta[1] = kappa
+        theta[2] = upsilon
+
+        _h = h(X, theta, n_hidden_layers, activation = 'relu')
+
+        assert_allclose(_h,
+                        array([[5.2889881 , 4.95855975, 4.90339585, 6.5634123 , 6.77504955]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+    def test_hypothesis6(self, omicron, omega):
+        n_hidden_layers = 1
+        X = array([[1, 0, 0.2, 0.45]])
+        theta = empty((n_hidden_layers + 1), dtype=object)
+        theta[0] = omicron
+        theta[1] = omega
+
+        _h = h(X, theta, n_hidden_layers, activation='tanh')
+
+        assert_allclose(_h,
+                        array([[0.98559455, 0.95847436, 0.91974195]]),
                         rtol=0, atol=0.001, equal_nan=False)
 
     def test_grad(self, omicron, omega):
@@ -447,6 +579,7 @@ class TestNeuralNetwork:
                                [0.93880, 0.88464, -0.15665]]),
                         rtol=0, atol=0.001, equal_nan=False)
 
+
     def test_back_prop_3(self, omega, zeta, iota):
         num_labels = 3
         y = array([[1]])
@@ -518,6 +651,76 @@ class TestNeuralNetwork:
                         array([[0.0075239, 0.0056169, 0.0042922,
                                 0.0042767, 0.0095374]]),
                         rtol=0, atol=0.001, equal_nan=False)
+
+    def test_back_prop_5(self, omega, zeta, iota):
+        num_labels = 3
+        y = array([[1]])
+        n_hidden_layers = 1
+        L = n_hidden_layers + 1  # last layer
+
+        theta = empty((n_hidden_layers + 1), dtype=object)
+        a = empty((n_hidden_layers + 2), dtype=object)
+        z = empty((n_hidden_layers + 2), dtype=object)
+
+        theta[1] = omega
+        a[2] = zeta
+        z[1] = iota
+
+        delta = back_propagation(y, theta, a, z, num_labels, n_hidden_layers, activation = 'relu')
+
+        assert_allclose(delta[L - 1],
+                        array([[0.8534392, 0.700443, 0.807916, 1.0661574, 0.8876592],
+                               [0.8060497, 0.6759113, 0.7695215, 1.0199047, 0.8472507],
+                               [0.8989481, 0.7221239, 0.8421495, 1.1090236, 0.9220341]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+        assert_allclose(delta[L],
+                        array([[0.91672, -0.14194, 0.81484],
+                               [0.89115, -0.16482, 0.7801],
+                               [0.9388, -0.11536, 0.84335]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
+    def test_back_prop_6(self, omicron, omega, kappa, upsilon):
+        num_labels = 3
+        y = array([[1]])
+        n_hidden_layers = 3
+        L = n_hidden_layers + 1  # last layer
+
+        theta = empty((n_hidden_layers + 1), dtype=object)
+        z = empty((n_hidden_layers + 2), dtype=object)
+        a = empty((n_hidden_layers + 2), dtype=object)
+
+        theta[0] = omicron
+        theta[1] = kappa
+        theta[2] = upsilon
+        theta[3] = omega
+
+        a[0] = array([[1, 0, 0.2, 0.45]])
+        a[1] = array([[1, 0.6859, 0.61869, 0.7192, 0.63146, 0.68815]])
+        a[2] = array([[1, 0.92912, 0.92877, 0.8169, 0.84812, 0.9402]])
+        a[3] = array([[1, 0.92585, 0.91859, 0.89109, 0.92052, 0.93092]])
+        a[4] = array([[0.97003, 0.92236, 0.90394]])
+
+        z[1] = array([[0.781, 0.484, 0.9405, 0.5385, 0.7915]])
+        z[2] = array([[2.5733, 2.5679, 1.4955, 1.72, 2.7551]])
+        z[3] = array([[2.5247, 2.4233, 2.1019, 2.4494, 2.6008]])
+        z[4] = array([[3.4772, 2.4749, 2.2417]])
+
+        delta = back_propagation(y, theta, a, z, num_labels, n_hidden_layers, activation='tanh')
+
+        assert_allclose(delta[L],
+                        array([[0.97003, -0.07764, 0.90394]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(delta[L - 1],
+                        array([[0.02455919, 0.0233925, 0.05242708, 0.03453569, 0.02158839]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(delta[L - 2],
+                        array([[0.00196166, 0.00182153, 0.01162824, 0.00582034, 0.0010187]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+        assert_allclose(delta[L - 3],
+                        array([[0.00597431, 0.005469, 0.00331981, 0.00263862, 0.00607317]]),
+                        rtol=0, atol=0.001, equal_nan=False)
+
 
     def test_init_nn_weights1(self):
         num_labels = 3

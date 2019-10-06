@@ -8,14 +8,14 @@
 from numpy import zeros, copy, std, mean, float64, exp, seterr, maximum, ones_like
 
 # sigmoid gradient function
-def g(x, activation='sigmoid'):
+def g(x, activation):
     """This function applies the given activation function on a given value.
     Default: Linear Activation f(x) = x
 
     :param x: Input value or object containing value.
     :type x: obj
 
-    :param activation: Name of the activation function used (default sigmoid).
+    :param activation: Name of the activation function
     :type activation: str
 
     :returns: Activation function at value.
@@ -26,18 +26,20 @@ def g(x, activation='sigmoid'):
         return maximum(0, x)
     elif a_lower == 'tanh':
         return (exp(x) - exp(-1*x)) / (exp(x) + exp(-1*x))
-    else:
+    elif a_lower == 'sigmoid':
         return 1 / (1 + exp(-x))
+    else:
+        return x
 
 
 # sigmoid gradient function
-def g_grad(x, activation='sigmoid'):
+def g_grad(x, activation):
     """This function calculates the gradient of activation function at a given value.
 
     :param x: Input value or object containing value .
     :type x: obj
 
-    :param activation: The activation function used
+    :param activation: The activation function
     :type activation: str
 
     :returns: Activation function gradient at value.
@@ -50,11 +52,14 @@ def g_grad(x, activation='sigmoid'):
         return x
 
     elif a_lower == 'tanh':
-        activated_tanh = g(x, activation='tanh')
+        activated_tanh = g(x, activation = 'tanh')
         return 1 - activated_tanh**2
 
+    elif a_lower == 'sigmoid':
+        return g(x, activation = 'sigmoid') * (1 - g(x, activation = 'sigmoid'))
+
     else:
-        return g(x) * (1 - g(x))
+        return ones_like(x)
 
 
 def gradient_descent(X, y, grad, initial_theta,

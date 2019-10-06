@@ -14,7 +14,7 @@ from numpy import (float64, ones, append, sum, dot, log,
 from touvlo.utils import g, g_grad
 
 
-def feed_forward(X, theta, n_hidden_layers=1):
+def feed_forward(X, theta, n_hidden_layers=1, activation='sigmoid'):
     """Applies forward propagation to calculate model's hypothesis.
 
     :param X: Features' dataset.
@@ -25,6 +25,9 @@ def feed_forward(X, theta, n_hidden_layers=1):
 
     :param n_hidden_layers: Number of hidden layers in network.
     :type n_hidden_layers: int
+
+    :param activation: Name of activation function to be used (default sigmoid)
+    :type activation: str
 
     :returns:
         - z - array of parameters prior to activation by layer.
@@ -43,18 +46,18 @@ def feed_forward(X, theta, n_hidden_layers=1):
     # Hidden unit layers
     for l in range(1, (len(a) - 1)):
         z[l] = a[l - 1].dot(theta[l - 1].T)
-        a[l] = g(z[l])
+        a[l] = g(z[l], activation)
         a[l] = append(ones((len(a[l]), 1), float64),  # add intercept
                       a[l], axis=1)
 
     # Output layer
     z[len(a) - 1] = a[(len(a) - 2)].dot(theta[(len(a) - 2)].T)
-    a[len(a) - 1] = g(z[len(a) - 1])  # hypothesis
+    a[len(a) - 1] = g(z[len(a) - 1], activation)  # hypothesis
 
     return z, a
 
 
-def back_propagation(y, theta, a, z, num_labels, n_hidden_layers=1):
+def back_propagation(y, theta, a, z, num_labels, n_hidden_layers=1, activation='sigmoid'):
     """Applies back propagation to minimize model's loss.
 
     :param y: Column vector of expected values.
@@ -66,7 +69,7 @@ def back_propagation(y, theta, a, z, num_labels, n_hidden_layers=1):
     :param a: array of activation matrices by layer.
     :type a: numpy.array(numpy.array)
 
-    :param z: array of parameters prior to sigmoid by layer.
+    :param z: array of parameters prior to action function by layer.
     :type z: numpy.array(numpy.array)
 
     :param num_labels: Number of classes in multiclass classification.
@@ -74,6 +77,9 @@ def back_propagation(y, theta, a, z, num_labels, n_hidden_layers=1):
 
     :param n_hidden_layers: Number of hidden layers in network.
     :type n_hidden_layers: int
+
+    :param activation: Name of activation function to be used (default sigmoid)
+    :type activation: str
 
     :returns: array of matrices of 'error values' by layer.
     :rtype: numpy.array(numpy.array)
@@ -86,12 +92,12 @@ def back_propagation(y, theta, a, z, num_labels, n_hidden_layers=1):
         delta[L][:, c] = a[L][:, c] - (y == c)
 
     for l in range(L, 1, -1):
-        delta[l - 1] = delta[l].dot(theta[l - 1])[:, 1:] * g_grad(z[l - 1])
+        delta[l - 1] = delta[l].dot(theta[l - 1])[:, 1:] * g_grad(z[l - 1], activation)
 
     return delta
 
 
-def h(X, theta, n_hidden_layers=1):
+def h(X, theta, n_hidden_layers=1, activation='sigmoid'):
     """Classification Neural Network hypothesis.
 
     :param X: Features' dataset.
@@ -103,10 +109,13 @@ def h(X, theta, n_hidden_layers=1):
     :param n_hidden_layers: Number of hidden layers in network.
     :type n_hidden_layers: int
 
+    :param activation: Name of activation function used (default sigmoid)
+    :type activation: str
+
     :returns: The probability that each entry belong to class 1.
     :rtype: numpy.array
     """
-    _, a = feed_forward(X, theta, n_hidden_layers)
+    _, a = feed_forward(X, theta, n_hidden_layers, activation)
     L = n_hidden_layers + 1  # last layer
 
     hypothesis = a[L]
@@ -192,7 +201,7 @@ def grad(X, y, nn_params, _lambda, input_layer_size,
     theta = unravel_params(nn_params, input_layer_size, hidden_layer_size,
                            num_labels, n_hidden_layers)
 
-    # Initi gradient with zeros
+    # Initialize gradient with zeros
     theta_grad = empty((n_hidden_layers + 1), dtype=object)
     for i in range(len(theta)):
         theta_grad[i] = zeros(shape=theta[i].shape, dtype=float64)
