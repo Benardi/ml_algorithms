@@ -1,5 +1,3 @@
-import pytest
-
 from unittest import TestCase
 from inspect import ismodule, isfunction, getmembers
 
