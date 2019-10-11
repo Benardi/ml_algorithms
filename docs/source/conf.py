@@ -10,6 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import rtcat_sphinx_theme
 import os
 import sys
 from unittest.mock import MagicMock
@@ -17,13 +18,13 @@ sys.path.insert(0, os.path.abspath('../..'))
 sys.setrecursionlimit(1500)
 
 # Cool theme
-import rtcat_sphinx_theme
 
 
 class Mock(MagicMock):
     @classmethod
     def __getattr__(cls, name):
         return MagicMock()
+
 
 MOCK_MODULES = ['numpy', 'numpy.linalg', 'numpy.random']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
@@ -37,7 +38,7 @@ author = 'Benardi Nunes'
 # The short X.Y version
 version = '0.4'
 # The full version, including alpha/beta/rc tags
-release = '0.4.2'
+release = '0.4.3'
 
 
 # -- General configuration ---------------------------------------------------
@@ -96,13 +97,14 @@ html_theme_path = [rtcat_sphinx_theme.get_html_theme_path()]
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    "collapse_navigation" : False
+    "collapse_navigation": False
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
 
 def setup(app):
     app.add_stylesheet("css/theme.css")
@@ -127,23 +129,23 @@ htmlhelp_basename = 'Touvlodoc'
 # -- Options for LaTeX output ------------------------------------------------
 
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
- 'papersize': 'letterpaper',
-# The font size ('10pt', '11pt' or '12pt').
- 'pointsize': '10pt',
-# Additional stuff for the LaTeX preamble.
- 'preamble': '',
-# Latex figure (float) alignment
- 'figure_align': 'htbp',
+    # The paper size ('letterpaper' or 'a4paper').
+    'papersize': 'letterpaper',
+    # The font size ('10pt', '11pt' or '12pt').
+    'pointsize': '10pt',
+    # Additional stuff for the LaTeX preamble.
+    'preamble': '',
+    # Latex figure (float) alignment
+    'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-            (master_doc, 'touvlo.tex', 'Touvlo Documentation',
-                     'Benardi Nunes', 'manual'),
-            ]
+    (master_doc, 'touvlo.tex', 'Touvlo Documentation',
+     'Benardi Nunes', 'manual'),
+]
 
 
 # -- Options for manual page output ------------------------------------------
@@ -151,9 +153,9 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-            (master_doc, 'touvlo', 'Touvlo Documentation',
-                     [author], 1)
-            ]
+    (master_doc, 'touvlo', 'Touvlo Documentation',
+     [author], 1)
+]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -162,10 +164,10 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'Touvlo', 'Touvlo Documentation',
-   author, 'Touvlo', 'Machine Learning algorithms and models implemented from scratch, provided block by block.',
-   'Miscellaneous'),
-            ]
+    (master_doc, 'Touvlo', 'Touvlo Documentation',
+     author, 'Touvlo', 'Machine Learning algorithms and models implemented from scratch, provided block by block.',
+     'Miscellaneous'),
+]
 
 
 # -- Options for Epub output -------------------------------------------------
