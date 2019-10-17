@@ -1,9 +1,8 @@
 ![Touvlo Logo](docs/content/img/touvlo_wide.png)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo?ref=badge_shield)
-
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo?ref=badge_small" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo.svg?type=small"/></a>
 [![Build Status](https://api.travis-ci.org/Benardi/touvlo.svg?branch=master)](https://travis-ci.org/Benardi/touvlo)
 [![Documentation Status](https://readthedocs.org/projects/touvlo/badge/?version=latest)](https://touvlo.readthedocs.io/en/latest/?badge=latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.5](https://img.shields.io/badge/python-3.5-blue.svg)](https://www.python.org/downloads/release/python-350/)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
@@ -109,10 +108,10 @@ See also the list of [contributors](https://github.com/Benardi/touvlo/contributo
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE) file for details
 
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo?ref=badge_large)
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo?ref=badge_large" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo.svg?type=large"/></a>
 
 ## Acknowledgments
 
