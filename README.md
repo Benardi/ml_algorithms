@@ -1,4 +1,5 @@
 ![Touvlo Logo](docs/content/img/touvlo_wide.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo?ref=badge_shield)
 
 [![Build Status](https://api.travis-ci.org/Benardi/touvlo.svg?branch=master)](https://travis-ci.org/Benardi/touvlo)
 [![Documentation Status](https://readthedocs.org/projects/touvlo/badge/?version=latest)](https://touvlo.readthedocs.io/en/latest/?badge=latest)
@@ -109,6 +110,9 @@ See also the list of [contributors](https://github.com/Benardi/touvlo/contributo
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo?ref=badge_large)
 
 ## Acknowledgments
 
