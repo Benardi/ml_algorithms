@@ -240,7 +240,6 @@ def rand_init_weights(L_in, L_out):
     :returns: Random values' matrix of conforming dimensions.
     :rtype: numpy.array
     """
-    W = zeros((L_out, 1 + L_in), float64)  # plus 1 for bias term
     epsilon_init = sqrt(6) / sqrt((L_in + 1) + L_out)
 
     W = uniform(size=(L_out, 1 + L_in)) * 2 * epsilon_init - epsilon_init

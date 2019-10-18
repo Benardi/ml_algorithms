@@ -41,7 +41,7 @@ def cov_matrix(X, mu):
     :returns: Covariance matrix (n x n)
     :rtype: int
     """
-    m, n = X.shape
+    m, _ = X.shape
     X_minus_mu = X - mu
     sigma = (1 / m) * (X_minus_mu.T).dot(X_minus_mu)
 
@@ -81,7 +81,6 @@ def estimate_multi_gaussian(X):
         - mu (:py:class: numpy.array)
         - sigma (:py:class: numpy.array)
     """
-    m, n = X.shape
     mu = mean(X, axis=0)
     sigma = cov_matrix(X, mu)
 

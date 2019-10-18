@@ -5,7 +5,7 @@
 .. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
 """
 
-from numpy import log, zeros
+from numpy import log
 
 from touvlo.utils import g
 
@@ -134,8 +134,6 @@ def reg_grad(X, y, theta, _lambda):
     :rtype: numpy.array
     """
     m = len(y)
-    grad = zeros(theta.shape)
-
     grad = (1 / m) * (X.T).dot(h(X, theta) - y)
     grad[1:, :] = grad[1:, :] + (_lambda / m) * theta[1:, :]
 

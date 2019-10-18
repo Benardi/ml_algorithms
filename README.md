@@ -1,5 +1,6 @@
 ![Touvlo Logo](docs/content/img/touvlo_wide.png)
 <a href="https://app.fossa.io/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo?ref=badge_small" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2FBenardi%2Ftouvlo.svg?type=small"/></a>
+<a href="https://lgtm.com/projects/g/Benardi/touvlo/context:python"><img alt="Language grade: Python" src="https://img.shields.io/lgtm/grade/python/g/Benardi/touvlo.svg?logo=lgtm&logoWidth=18"/></a>
 [![Build Status](https://api.travis-ci.org/Benardi/touvlo.svg?branch=master)](https://travis-ci.org/Benardi/touvlo)
 [![Documentation Status](https://readthedocs.org/projects/touvlo/badge/?version=latest)](https://touvlo.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
