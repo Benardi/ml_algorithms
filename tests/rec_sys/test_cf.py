@@ -1,8 +1,8 @@
 import pytest
-from numpy import array
-from numpy.testing import assert_allclose
+from numpy import array, append
+from numpy.testing import assert_allclose, assert_array_equal
 
-from touvlo.rec_sys.cf import cost_function, grad
+from touvlo.rec_sys.cf import cost_function, grad, unravel_params
 
 
 class TestCollaborativeeFiltering:
@@ -50,14 +50,28 @@ class TestCollaborativeeFiltering:
                         31.344,
                         rtol=0, atol=0.001, equal_nan=False)
 
+    def test_unravel_params(self, X, theta):
+        num_users = 4
+        num_products = 5
+        num_features = 3
+        flat = append(X.flatten(), theta.flatten())
+        X_infltd, theta_infltd = unravel_params(flat, num_users,
+                                                num_products, num_features)
+
+        assert_array_equal(X_infltd, X)
+        assert_array_equal(theta_infltd, theta)
+
     def test_grad1(self, X, R, Y, theta):
         num_users = 4
-        num_movies = 5
+        num_products = 5
         num_features = 3
         _lambda = 0
 
-        X_grad, theta_grad = grad(X, R, Y, theta, num_users,
-                                  num_movies, num_features, _lambda)
+        flat = append(X.flatten(), theta.flatten())
+        params = grad(flat, R, Y, num_users, num_products,
+                      num_features, _lambda)
+        X_grad, theta_grad = unravel_params(params, num_users,
+                                            num_products, num_features)
 
         assert_allclose(X_grad,
                         array([[-2.52899, 7.57570, -1.89979],
@@ -66,7 +80,6 @@ class TestCollaborativeeFiltering:
                                [-0.38358, 2.26334, -0.35334],
                                [-0.80378, 4.74272, -0.74041]]),
                         rtol=0, atol=0.001, equal_nan=False)
-
         assert_allclose(theta_grad,
                         array([[-10.56802, 4.62776, -7.16004],
                                [-3.05099, 1.16441, -3.47411],
@@ -76,12 +89,15 @@ class TestCollaborativeeFiltering:
 
     def test_grad2(self, X, R, Y, theta):
         num_users = 4
-        num_movies = 5
+        num_products = 5
         num_features = 3
         _lambda = 1.5
 
-        X_grad, theta_grad = grad(X, R, Y, theta, num_users,
-                                  num_movies, num_features, _lambda)
+        flat = append(X.flatten(), theta.flatten())
+        params = grad(flat, R, Y, num_users, num_products,
+                      num_features, _lambda)
+        X_grad, theta_grad = unravel_params(params, num_users,
+                                            num_products, num_features)
 
         assert_allclose(X_grad,
                         array([[-0.95596, 6.97536, -0.10861],
