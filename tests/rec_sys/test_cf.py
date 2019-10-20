@@ -38,15 +38,15 @@ class TestCollaborativeeFiltering:
                       [-0.43192, -0.47880, 0.84671],
                       [0.72860, -0.27189, 0.32684]])
 
-    def test_cost_function1(self, X, R, Y, theta):
+    def test_cost_function1(self, X, Y, R, theta):
         _lambda = 0
-        assert_allclose(cost_function(X, R, Y, theta, _lambda),
+        assert_allclose(cost_function(X, Y, R, theta, _lambda),
                         22.225,
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_cost_function2(self, X, R, Y, theta):
+    def test_cost_function2(self, X, Y, R, theta):
         _lambda = 1.5
-        assert_allclose(cost_function(X, R, Y, theta, _lambda),
+        assert_allclose(cost_function(X, Y, R, theta, _lambda),
                         31.344,
                         rtol=0, atol=0.001, equal_nan=False)
 
@@ -61,14 +61,14 @@ class TestCollaborativeeFiltering:
         assert_array_equal(X_infltd, X)
         assert_array_equal(theta_infltd, theta)
 
-    def test_grad1(self, X, R, Y, theta):
+    def test_grad1(self, X, Y, R, theta):
         num_users = 4
         num_products = 5
         num_features = 3
         _lambda = 0
 
         flat = append(X.flatten(), theta.flatten())
-        params = grad(flat, R, Y, num_users, num_products,
+        params = grad(flat, Y, R, num_users, num_products,
                       num_features, _lambda)
         X_grad, theta_grad = unravel_params(params, num_users,
                                             num_products, num_features)
@@ -87,14 +87,14 @@ class TestCollaborativeeFiltering:
                                [0.00000, 0.00000, 0.00000]]),
                         rtol=0, atol=0.001, equal_nan=False)
 
-    def test_grad2(self, X, R, Y, theta):
+    def test_grad2(self, X, Y, R, theta):
         num_users = 4
         num_products = 5
         num_features = 3
         _lambda = 1.5
 
         flat = append(X.flatten(), theta.flatten())
-        params = grad(flat, R, Y, num_users, num_products,
+        params = grad(flat, Y, R, num_users, num_products,
                       num_features, _lambda)
         X_grad, theta_grad = unravel_params(params, num_users,
                                             num_products, num_features)

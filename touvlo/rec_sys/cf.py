@@ -1,3 +1,10 @@
+"""
+.. module:: cf
+    :synopsis: Provides routines to apply Collaborative Filtering.
+
+.. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
+"""
+
 from numpy import power, multiply, where, zeros, reshape, append
 from numpy import sum as add
 
@@ -5,25 +12,15 @@ from numpy import sum as add
 def unravel_params(params, num_users, num_products, num_features):
     """Unravels flattened array into features' matrices
 
-    :param params: Row vector of coefficients.
-    :type params: numpy.array
+    Args:
+        params (numpy.array): Row vector of coefficients.
+        num_users (int): Number of users in this instance.
+        num_products (int): Number of products in this instance.
+        num_features (int): Number of features in this instance.
 
-    :param num_users: Number of users in this instance.
-    :type num_users: int
-
-    :param num_products: Number of products in this instance.
-    :type num_products: int
-
-    :param num_features: Number of features in this instance.
-    :type num_features: int
-
-    :returns:
-        - X - Matrix of product features.
-        - theta - Matrix of user features.
-
-    :rtype:
-        - X (:py:class: numpy.array)
-        - theta (:py:class: numpy.array)
+    Returns:
+        (numpy.array, numpy.array): A 2-tuple consisting of a matrix of
+        product features and a matrix of user features.
     """
     X = params[0:(num_products * num_features)]
     X = reshape(X, (num_products, num_features))
@@ -32,26 +29,18 @@ def unravel_params(params, num_users, num_products, num_features):
     return X, theta
 
 
-def cost_function(X, R, Y, theta, _lambda):
+def cost_function(X, Y, R, theta, _lambda):
     """Computes the cost function J for Collaborative Filtering.
 
-    :param X: Matrix of product features.
-    :type X: numpy.array
+    Args:
+        X (numpy.array): Matrix of product features.
+        Y (numpy.array): Scores' matrix.
+        R (numpy.array): Matrix of 0s and 1s (whether there's a rating).
+        theta (numpy.array): Matrix of user features.
+        _lambda (float): The regularization hyperparameter.
 
-    :param Y: Scores' dataset.
-    :type Y: numpy.array
-
-    :param R: Dataset of 0s and 1s (whether there's a rating).
-    :type R: numpy.array
-
-    :param theta: Matrix of user features.
-    :type theta: numpy.array
-
-    :param _lambda: The regularization hyperparameter.
-    :type _lambda: float
-
-    :returns: Computed cost.
-    :rtype: float
+    Returns:
+        float: Computed cost.
     """
     J = power(X.dot(theta.T) - Y, 2)
     J = (1 / 2) * add(multiply(J, R))
@@ -60,33 +49,22 @@ def cost_function(X, R, Y, theta, _lambda):
     return J
 
 
-def grad(params, R, Y, num_users, num_products, num_features, _lambda):
-    """Computes the gradient for Collaborative Filtering.
+def grad(params, Y, R, num_users, num_products, num_features, _lambda):
+    """Calculates gradient of Collaborative Filtering's parameters
 
-    :param params: flattened product and user features.
-    :type params: numpy.array
+    Args:
+        params (numpy.array): flattened product and user features..
+        Y (numpy.array): Scores' matrix.
+        R (numpy.array): Matrix of 0s and 1s (whether there's a rating).
+        num_users (int): Number of users in this instance.
+        num_products (int): Number of products in this instance.
+        num_features (int): Number of features in this instance.
+        _lambda (float): The regularization hyperparameter.
 
-    :param Y: Scores' dataset.
-    :type Y: numpy.array
-
-    :param R: Dataset of 0s and 1s (whether there's a rating).
-    :type R: numpy.array
-
-    :param num_users: Number of users in this instance.
-    :type num_users: int
-
-    :param num_products: Number of products in this instance.
-    :type num_products: int
-
-    :param num_features: Number of features in this instance.
-    :type num_features: int
-
-    :param _lambda: The regularization hyperparameter.
-    :type _lambda: float
-
-    :returns: Flattened gradient for product and user features.
-    :rtype: numpy.array
+    Returns:
+        numpy.array: Flattened gradient of product and user parameters.
     """
+
     X, theta = unravel_params(params, num_users, num_products, num_features)
     X_grad = zeros(X.shape)
     theta_grad = zeros(theta.shape)
