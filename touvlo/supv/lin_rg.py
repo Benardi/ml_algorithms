@@ -206,3 +206,55 @@ class LinearRegression:
                 "'%s' (type '%s') was passed. " % (strategy, type(strategy)),
                 "The strategy parameter for the fit function should ",
                 "be 'BGD' or 'SGD' or 'MBGD' or 'normal_equation'.")
+
+
+class RidgeLinearRegression:
+    def __init__(self, theta=None, _lambda=0):
+        self.theta = theta
+        self._lambda = _lambda
+
+    def _add_bias_term(self, X):
+        m = len(X)
+        intercept = ones((m, 1), dtype=int)
+        X = append(intercept, X, axis=1)
+        return X
+
+    def predict(self, X):
+        X = self._add_bias_term(X)
+        return predict(X, self.theta)
+
+    def _normal_fit(self, X, y):
+        X = self._add_bias_term(X)
+        self.theta = reg_normal_eqn(X, y, self._lambda)
+
+    def _gradient_fit(self, grad_descent, X, y, alpha,
+                      num_iters, **kwargs):
+        if self.theta is None:
+            _, n = X.shape
+            self.theta = zeros((n + 1, 1), dtype=float64)
+
+        X = self._add_bias_term(X)
+        self.theta = grad_descent(X, y, reg_grad, self.theta, alpha,
+                                  num_iters, _lambda=self._lambda, **kwargs)
+
+    def cost(self, X, y, **kwargs):
+        X = self._add_bias_term(X)
+        return reg_cost_func(X, y, self.theta, self._lambda, **kwargs)
+
+    def fit(self, X, y, strategy='BGD', alpha=0.1,
+            num_iters=100, **kwargs):
+
+        if isinstance(strategy, str):
+            if (strategy == 'BGD'):
+                self._gradient_fit(BGD, X, y, alpha, num_iters, **kwargs)
+            elif strategy == 'SGD':
+                self._gradient_fit(SGD, X, y, alpha, num_iters, **kwargs)
+            elif strategy == 'MBGD':
+                self._gradient_fit(MBGD, X, y, alpha, num_iters, **kwargs)
+            elif strategy == 'normal_equation':
+                self._normal_fit(X, y)
+        else:
+            raise ValueError(
+                "'%s' (type '%s') was passed. " % (strategy, type(strategy)),
+                "The strategy parameter for the fit function should ",
+                "be 'BGD' or 'SGD' or 'MBGD' or 'normal_equation'.")

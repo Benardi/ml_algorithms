@@ -6,7 +6,7 @@ from numpy import ones, zeros, float64, array, append, genfromtxt
 
 from touvlo.supv.lin_rg import (normal_eqn, cost_func, reg_cost_func, grad,
                                 reg_grad, predict, h, LinearRegression,
-                                reg_normal_eqn)
+                                RidgeLinearRegression, reg_normal_eqn)
 from touvlo.utils import numerical_grad
 
 TESTDATA1 = os.path.join(os.path.dirname(__file__), 'data1.csv')
@@ -599,16 +599,6 @@ class TestLinearRegression:
                         lr.cost(X, y),
                         rtol=0, atol=0.001)
 
-    def test_LinearRegression_cost(self, data1):
-        y = data1[:, -1:]
-        X = data1[:, :-1]
-        lr = LinearRegression()
-        lr.fit(X, y, strategy="normal_equation")
-
-        assert_allclose([[-3.896], [1.193]],
-                        lr.theta,
-                        rtol=0, atol=0.001)
-
     def test_LinearRegression_normal_fit(self, data1):
         y = data1[:, -1:]
         X = data1[:, :-1]
@@ -664,6 +654,177 @@ class TestLinearRegression:
         X = array([[3.5]])
         theta = array([[-3.6303], [1.1664]])
         lr = LinearRegression(theta)
+
+        assert_allclose([[0.4521]],
+                        lr.predict(X),
+                        rtol=0, atol=0.001)
+
+# RIDGE LINEAR REGRESSION CLASS
+
+    def test_RidgeLinearRegression_cost_data1_1(self, data1):
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        _, n = X.shape
+        theta = ones((n + 1, 1), dtype=float64)
+        lr = RidgeLinearRegression(theta, _lambda=0)
+
+        assert_allclose([[10.266]],
+                        lr.cost(X, y),
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_cost_data1_2(self, data1):
+
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        _, n = X.shape
+        theta = ones((n + 1, 1), dtype=float64)
+        lr = RidgeLinearRegression(theta, _lambda=100)
+
+        assert_allclose([[10.781984]],
+                        lr.cost(X, y),
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_cost_data2_1(self, data2):
+        y = data2[:, -1:]
+        X = data2[:, :-1]
+        _, n = X.shape
+        theta = ones((n + 1, 1), dtype=float64)
+        lr = RidgeLinearRegression(theta, _lambda=0)
+
+        assert_allclose([[64828197300.798]],
+                        lr.cost(X, y),
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_cost_data2_2(self, data2):
+        y = data2[:, -1:]
+        X = data2[:, :-1]
+        _, n = X.shape
+        theta = ones((n + 1, 1), dtype=float64)
+        lr = RidgeLinearRegression(theta, _lambda=1000000)
+
+        assert_allclose([[64828218577.393623]],
+                        lr.cost(X, y),
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_normal_fit_data1_1(self, data1):
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        lr = RidgeLinearRegression(_lambda=0)
+        lr.fit(X, y, strategy="normal_equation")
+
+        assert_allclose([[-3.896], [1.193]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_normal_fit_data1_2(self, data1):
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        lr = RidgeLinearRegression(_lambda=1)
+        lr.fit(X, y, strategy="normal_equation")
+
+        assert_allclose([[-3.889], [1.192]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_fit_BGD1(self, data2):
+        y = data2[:, -1:]
+        X = data2[:, :-1]
+        lr = RidgeLinearRegression(_lambda=0)
+        lr.fit(X, y, strategy="BGD", alpha=1, num_iters=1)
+
+        assert_allclose([[340412.659], [764209128.191], [1120367.702]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_fit_BGD2(self, data1):
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        _, n = X.shape
+        theta = ones((n + 1, 1), dtype=float64)
+        lr = RidgeLinearRegression(theta, _lambda=100)
+
+        lr.fit(X, y, strategy="BGD", alpha=1, num_iters=1)
+
+        assert_allclose([[-2.321], [-24.266]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_fit_SGD1(self, err):
+        X = array([[0, 1, 2], [-1, 5, 3], [2, 0, 1]])
+        y = array([[0.3], [1.2], [0.5]])
+        lr = RidgeLinearRegression(_lambda=0)
+        lr.fit(X, y, strategy="SGD", alpha=1, num_iters=1)
+
+        assert_allclose(array([[2.3], [11.2], [-11.7], [-2.2]]),
+                        lr.theta,
+                        rtol=0, atol=0.001, equal_nan=False)
+
+    def test_RidgeLinearRegression_fit_SGD2(self, err):
+        X = array([[0, 1, 2], [-1, 5, 3], [2, 0, 1]])
+        y = array([[0.3], [1.2], [0.5]])
+        lr = RidgeLinearRegression(_lambda=10)
+        lr.fit(X, y, strategy="SGD", alpha=1, num_iters=1)
+
+        assert_allclose(array([[8.3], [-0.8], [132.3], [123.8]]),
+                        lr.theta,
+                        rtol=0, atol=0.001, equal_nan=False)
+
+    def test_RidgeLinearRegression_fit_MBGD1(self, data2):
+        y = data2[:, -1:]
+        X = data2[:, :-1]
+        m = len(X)
+        lr = RidgeLinearRegression(_lambda=0)
+        lr.fit(X, y, strategy="MBGD", alpha=1, num_iters=1, b=m)
+
+        assert_allclose([[340412.659], [764209128.191], [1120367.702]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_fit_MBGD2(self, err):
+        X = array([[0, 1, 2], [-1, 5, 3], [2, 0, 1]])
+        y = array([[0.3], [1.2], [0.5]])
+        lr = RidgeLinearRegression(_lambda=0)
+        lr.fit(X, y, strategy="MBGD", alpha=1, num_iters=1, b=1)
+
+        assert_allclose(array([[2.3], [11.2], [-11.7], [-2.2]]),
+                        lr.theta,
+                        rtol=0, atol=0.001, equal_nan=False)
+
+    def test_RidgeLinearRegression_fit_MBGD3(self, data1):
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        m, n = X.shape
+        theta = ones((n + 1, 1), dtype=float64)
+        lr = RidgeLinearRegression(theta, _lambda=100)
+        lr.fit(X, y, strategy="MBGD", alpha=1, num_iters=1, b=m)
+
+        assert_allclose([[-2.321], [-24.266]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_fit_MBGD4(self, data1):
+        X = array([[0, 1, 2], [-1, 5, 3], [2, 0, 1]])
+        y = array([[0.3], [1.2], [0.5]])
+        lr = RidgeLinearRegression(_lambda=10)
+        lr.fit(X, y, strategy="MBGD", alpha=1, num_iters=1, b=1)
+
+        assert_allclose(array([[8.3], [-0.8], [132.3], [123.8]]),
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_predict1(self):
+        X = array([[3.5]])
+        theta = array([[-3.6303], [1.1664]])
+        lr = RidgeLinearRegression(theta)
+
+        assert_allclose([[0.4521]],
+                        lr.predict(X),
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_predict2(self):
+        X = array([[3.5]])
+        theta = array([[-3.6303], [1.1664]])
+        lr = RidgeLinearRegression(theta, _lambda=10)
 
         assert_allclose([[0.4521]],
                         lr.predict(X),
