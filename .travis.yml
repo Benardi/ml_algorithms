@@ -7,19 +7,19 @@ language: python
 matrix:
   include:
     - python: 3.5
-      env: TOXENV=py35,pep8,cover
+      env: TOXENV=py35,pep8,cover,pylint
     - python: 3.6
-      env: TOXENV=py36,pep8,cover
+      env: TOXENV=py36,pep8,cover,pylint
     - python: 3.7
-      env: TOXENV=py37,pep8,cover
-install: 
+      env: TOXENV=py37,pep8,cover,pylint
+install:
   - pip install -U tox
   - pip install tox codecov
 
 env:
   - CODECOV_TOKEN="8c17b46a-8006-40aa-b411-5753f7158241"
-script: 
+script:
   - tox -e $TOXENV
 after_success:
-  - codecov 
+  - codecov
 
