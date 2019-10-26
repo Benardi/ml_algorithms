@@ -5,7 +5,7 @@ from numpy.testing import assert_allclose
 from numpy import ones, zeros, float64, array, append, genfromtxt
 
 from touvlo.supv.lin_rg import (normal_eqn, cost_func, reg_cost_func, grad,
-                                reg_grad, predict, h)
+                                reg_grad, predict, h, LinearRegression)
 from touvlo.utils import numerical_grad
 
 TESTDATA1 = os.path.join(os.path.dirname(__file__), 'data1.csv')
@@ -505,7 +505,7 @@ class TestLinearRegression:
 
     def test_h_1(self):
         X = array([[3.5]])
-        m, n = X.shape
+        m, _ = X.shape
         intercept = ones((m, 1), dtype=float64)
         X = append(intercept, X, axis=1)
         theta = array([[-3.6303], [1.1664]])
@@ -545,4 +545,87 @@ class TestLinearRegression:
 
         assert_allclose([[-0.2]],
                         h(X, theta),
+                        rtol=0, atol=0.001)
+
+# LINEAR REGRESSION CLASS
+
+    def test_LinearRegression_cost_data1_1(self, data1):
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        _, n = X.shape
+        theta = ones((n + 1, 1), dtype=float64)
+        lr = LinearRegression(theta)
+
+        assert_allclose([[10.266]],
+                        lr.cost(X, y),
+                        rtol=0, atol=0.001)
+
+    def test_LinearRegression_cost(self, data1):
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        lr = LinearRegression()
+        lr.fit(X, y, strategy="normal_equation")
+
+        assert_allclose([[-3.896], [1.193]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_LinearRegression_normal_fit(self, data1):
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        lr = LinearRegression()
+        lr.fit(X, y, strategy="normal_equation")
+
+        assert_allclose([[-3.896], [1.193]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_LinearRegression_fit_BGD(self, data2):
+        y = data2[:, -1:]
+        X = data2[:, :-1]
+        lr = LinearRegression()
+        lr.fit(X, y, strategy="BGD", alpha=1, num_iters=1)
+
+        assert_allclose([[340412.659], [764209128.191], [1120367.702]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_LinearRegression_fit_SGD(self, err):
+        X = array([[0, 1, 2], [-1, 5, 3], [2, 0, 1]])
+        y = array([[0.3], [1.2], [0.5]])
+        lr = LinearRegression()
+        lr.fit(X, y, strategy="SGD", alpha=1, num_iters=1)
+
+        assert_allclose(array([[2.3], [11.2], [-11.7], [-2.2]]),
+                        lr.theta,
+                        rtol=0, atol=0.001, equal_nan=False)
+
+    def test_LinearRegression_fit_MBGD1(self, data2):
+        y = data2[:, -1:]
+        X = data2[:, :-1]
+        m = len(X)
+        lr = LinearRegression()
+        lr.fit(X, y, strategy="MBGD", alpha=1, num_iters=1, b=m)
+
+        assert_allclose([[340412.659], [764209128.191], [1120367.702]],
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_LinearRegression_fit_MBGD2(self, err):
+        X = array([[0, 1, 2], [-1, 5, 3], [2, 0, 1]])
+        y = array([[0.3], [1.2], [0.5]])
+        lr = LinearRegression()
+        lr.fit(X, y, strategy="MBGD", alpha=1, num_iters=1, b=1)
+
+        assert_allclose(array([[2.3], [11.2], [-11.7], [-2.2]]),
+                        lr.theta,
+                        rtol=0, atol=0.001, equal_nan=False)
+
+    def test_LinearRegression_predict(self):
+        X = array([[3.5]])
+        theta = array([[-3.6303], [1.1664]])
+        lr = LinearRegression(theta)
+
+        assert_allclose([[0.4521]],
+                        lr.predict(X),
                         rtol=0, atol=0.001)
