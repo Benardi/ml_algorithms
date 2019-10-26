@@ -3,6 +3,7 @@ import os
 import pytest
 from numpy.testing import assert_allclose
 from numpy import ones, zeros, float64, array, append, genfromtxt
+from numpy.linalg import LinAlgError
 
 from touvlo.supv.lin_rg import (normal_eqn, cost_func, reg_cost_func, grad,
                                 reg_grad, predict, h, LinearRegression,
@@ -88,6 +89,43 @@ class TestLinearRegression:
         _lambda = 100
 
         assert_allclose([[74104.492], [135.249], [-1350.731]],
+                        reg_normal_eqn(X, y, _lambda),
+                        rtol=0, atol=0.001)
+
+    def test_normal_eqn_singular(self, data2):
+        y = array([[0], [0], [0]])
+        X = array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+        m, _ = X.shape
+        intercept = ones((m, 1), dtype=int)
+        X = append(intercept, X, axis=1)
+
+        with pytest.raises(LinAlgError) as excinfo:
+            normal_eqn(X, y)
+        msg = excinfo.value.args[0]
+        assert msg == ("Singular matrix")
+
+    def test_reg_normal_eqn_singular1(self, data2):
+        y = array([[0], [0], [0]])
+        X = array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+        m, _ = X.shape
+        intercept = ones((m, 1), dtype=int)
+        X = append(intercept, X, axis=1)
+        _lambda = 0
+
+        with pytest.raises(LinAlgError) as excinfo:
+            reg_normal_eqn(X, y, _lambda),
+        msg = excinfo.value.args[0]
+        assert msg == ("Singular matrix")
+
+    def test_reg_normal_eqn_singular2(self, data2):
+        y = array([[0], [0], [0]])
+        X = array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+        m, _ = X.shape
+        intercept = ones((m, 1), dtype=int)
+        X = append(intercept, X, axis=1)
+        _lambda = 0.1
+
+        assert_allclose([[0], [0], [0], [0]],
                         reg_normal_eqn(X, y, _lambda),
                         rtol=0, atol=0.001)
 
@@ -588,6 +626,19 @@ class TestLinearRegression:
 
 # LINEAR REGRESSION CLASS
 
+    def test_LinearRegression_constructor1(self, data1):
+        theta = array([[1.], [0.6], [1.]])
+        lr = LinearRegression(theta)
+
+        assert_allclose(array([[1.], [0.6], [1.]]),
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_LinearRegression_constructor2(self):
+        lr = LinearRegression()
+
+        assert lr.theta is None
+
     def test_LinearRegression_cost_data1_1(self, data1):
         y = data1[:, -1:]
         X = data1[:, :-1]
@@ -660,6 +711,21 @@ class TestLinearRegression:
                         rtol=0, atol=0.001)
 
 # RIDGE LINEAR REGRESSION CLASS
+
+    def test_RidgeLinearRegression_constructor1(self, data1):
+        theta = ones((3, 1), dtype=float64)
+        lr = RidgeLinearRegression(theta, _lambda=13.50)
+
+        assert lr._lambda == 13.50
+        assert_allclose(array([[1.], [1.], [1.]]),
+                        lr.theta,
+                        rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_constructor2(self):
+        lr = RidgeLinearRegression()
+
+        assert lr.theta is None
+        assert lr._lambda == 0
 
     def test_RidgeLinearRegression_cost_data1_1(self, data1):
         y = data1[:, -1:]
@@ -811,6 +877,19 @@ class TestLinearRegression:
         assert_allclose(array([[8.3], [-0.8], [132.3], [123.8]]),
                         lr.theta,
                         rtol=0, atol=0.001)
+
+    def test_RidgeLinearRegression_fit_unknown(self, data1):
+        X = array([[0, 1, 2], [-1, 5, 3], [2, 0, 1]])
+        y = array([[0.3], [1.2], [0.5]])
+        lr = RidgeLinearRegression(_lambda=10)
+
+        with pytest.raises(ValueError) as excinfo:
+            lr.fit(X, y, strategy="oompa_loompa")
+
+        msg = excinfo.value.args[0]
+        assert msg == ("'oompa_loompa' (type '<class 'str'>') was passed. ",
+                       'The strategy parameter for the fit function should ',
+                       "be 'BGD' or 'SGD' or 'MBGD' or 'normal_equation'.")
 
     def test_RidgeLinearRegression_predict1(self):
         X = array([[3.5]])

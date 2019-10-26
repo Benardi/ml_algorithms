@@ -8,7 +8,7 @@
 from abc import ABC, abstractmethod
 
 from numpy import zeros, float64, ones, append, identity
-from numpy.linalg import inv, LinAlgError
+from numpy.linalg import inv
 
 from touvlo.utils import BGD, SGD, MBGD
 
@@ -124,12 +124,8 @@ def normal_eqn(X, y):
     n = X.shape[1]  # number of columns
     theta = zeros((n, 1), dtype=float64)
 
-    try:
-        X_T = X.T
-        theta = inv(X_T.dot(X)).dot(X_T).dot(y)
-
-    except LinAlgError:
-        pass
+    X_T = X.T
+    theta = inv(X_T.dot(X)).dot(X_T).dot(y)
 
     return theta
 
@@ -151,10 +147,7 @@ def reg_normal_eqn(X, y, _lambda):
     L[0, 0] = 0
     X_T = X.T
 
-    try:
-        theta = inv(X_T.dot(X) + _lambda * L).dot(X_T).dot(y)
-    except LinAlgError:
-        pass
+    theta = inv(X_T.dot(X) + _lambda * L).dot(X_T).dot(y)
 
     return theta
 
@@ -218,20 +211,22 @@ class AbstractLinearRegression(ABC):
         Returns:
             None
         """
-        if isinstance(strategy, str):
-            if (strategy == 'BGD'):
-                self._gradient_fit(BGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'SGD':
-                self._gradient_fit(SGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'MBGD':
-                self._gradient_fit(MBGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'normal_equation':
-                self._normal_fit(X, y)
+        if isinstance(strategy, str) and strategy == 'BGD':
+            self._gradient_fit(BGD, X, y, alpha, num_iters, **kwargs)
+
+        elif isinstance(strategy, str) and strategy == 'SGD':
+            self._gradient_fit(SGD, X, y, alpha, num_iters, **kwargs)
+
+        elif isinstance(strategy, str) and strategy == 'MBGD':
+            self._gradient_fit(MBGD, X, y, alpha, num_iters, **kwargs)
+
+        elif isinstance(strategy, str) and strategy == 'normal_equation':
+            self._normal_fit(X, y)
         else:
             raise ValueError(
-                "'%s' (type '%s') was passed. " % (strategy, type(strategy)),
-                "The strategy parameter for the fit function should ",
-                "be 'BGD' or 'SGD' or 'MBGD' or 'normal_equation'.")
+                ("'%s' (type '%s') was passed. " % (strategy, type(strategy)),
+                 "The strategy parameter for the fit function should ",
+                 "be 'BGD' or 'SGD' or 'MBGD' or 'normal_equation'."))
 
 
 class LinearRegression(AbstractLinearRegression):
