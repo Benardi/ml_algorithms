@@ -5,6 +5,8 @@
 .. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
 """
 
+from abc import ABC, abstractmethod
+
 from numpy import zeros, float64, ones, append, identity
 from numpy.linalg import inv, LinAlgError
 
@@ -157,9 +159,42 @@ def reg_normal_eqn(X, y, _lambda):
     return theta
 
 
-class LinearRegression:
+class AbstractLinearRegression(ABC):
+
     def __init__(self, theta=None):
         self.theta = theta
+
+    @abstractmethod
+    def _normal_fit(self, X, y):
+        pass
+
+    @abstractmethod
+    def _gradient_fit(self, grad_descent, X, y, alpha, num_iters):
+        pass
+
+    def fit(self, X, y, strategy='BGD', alpha=0.1,
+            num_iters=100, **kwargs):
+
+        if isinstance(strategy, str):
+            if (strategy == 'BGD'):
+                self._gradient_fit(BGD, X, y, alpha, num_iters, **kwargs)
+            elif strategy == 'SGD':
+                self._gradient_fit(SGD, X, y, alpha, num_iters, **kwargs)
+            elif strategy == 'MBGD':
+                self._gradient_fit(MBGD, X, y, alpha, num_iters, **kwargs)
+            elif strategy == 'normal_equation':
+                self._normal_fit(X, y)
+        else:
+            raise ValueError(
+                "'%s' (type '%s') was passed. " % (strategy, type(strategy)),
+                "The strategy parameter for the fit function should ",
+                "be 'BGD' or 'SGD' or 'MBGD' or 'normal_equation'.")
+
+
+class LinearRegression(AbstractLinearRegression):
+
+    def __init__(self, theta=None):
+        super().__init__(theta)
 
     def _add_bias_term(self, X):
         m = len(X)
@@ -189,28 +224,10 @@ class LinearRegression:
         X = self._add_bias_term(X)
         return cost_func(X, y, self.theta)
 
-    def fit(self, X, y, strategy='BGD', alpha=0.1,
-            num_iters=100, **kwargs):
 
-        if isinstance(strategy, str):
-            if (strategy == 'BGD'):
-                self._gradient_fit(BGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'SGD':
-                self._gradient_fit(SGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'MBGD':
-                self._gradient_fit(MBGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'normal_equation':
-                self._normal_fit(X, y)
-        else:
-            raise ValueError(
-                "'%s' (type '%s') was passed. " % (strategy, type(strategy)),
-                "The strategy parameter for the fit function should ",
-                "be 'BGD' or 'SGD' or 'MBGD' or 'normal_equation'.")
-
-
-class RidgeLinearRegression:
+class RidgeLinearRegression(AbstractLinearRegression):
     def __init__(self, theta=None, _lambda=0):
-        self.theta = theta
+        super().__init__(theta)
         self._lambda = _lambda
 
     def _add_bias_term(self, X):
@@ -240,21 +257,3 @@ class RidgeLinearRegression:
     def cost(self, X, y, **kwargs):
         X = self._add_bias_term(X)
         return reg_cost_func(X, y, self.theta, self._lambda, **kwargs)
-
-    def fit(self, X, y, strategy='BGD', alpha=0.1,
-            num_iters=100, **kwargs):
-
-        if isinstance(strategy, str):
-            if (strategy == 'BGD'):
-                self._gradient_fit(BGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'SGD':
-                self._gradient_fit(SGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'MBGD':
-                self._gradient_fit(MBGD, X, y, alpha, num_iters, **kwargs)
-            elif strategy == 'normal_equation':
-                self._normal_fit(X, y)
-        else:
-            raise ValueError(
-                "'%s' (type '%s') was passed. " % (strategy, type(strategy)),
-                "The strategy parameter for the fit function should ",
-                "be 'BGD' or 'SGD' or 'MBGD' or 'normal_equation'.")
