@@ -5,7 +5,7 @@
 .. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
 """
 
-from numpy import zeros, float64, ones, append
+from numpy import zeros, float64, ones, append, identity
 from numpy.linalg import inv, LinAlgError
 
 from touvlo.utils import BGD, SGD, MBGD
@@ -120,12 +120,37 @@ def normal_eqn(X, y):
         numpy.array: Optimized model parameters theta.
     """
     n = X.shape[1]  # number of columns
-    theta = zeros((n + 1, 1), dtype=float64)
+    theta = zeros((n, 1), dtype=float64)
 
     try:
         X_T = X.T
         theta = inv(X_T.dot(X)).dot(X_T).dot(y)
 
+    except LinAlgError:
+        pass
+
+    return theta
+
+
+def reg_normal_eqn(X, y, _lambda):
+    """Produces optimal theta via normal equation.
+
+    Args:
+        X (numpy.array): Features' dataset plus bias column.
+        y (numpy.array): Column vector of expected values.
+        _lambda (float): The regularization hyperparameter.
+
+    Returns:
+        numpy.array: Optimized model parameters theta.
+    """
+    n = X.shape[1]  # number of columns, already has bias
+    theta = zeros((n, 1), dtype=float64)
+    L = identity(n)
+    L[0, 0] = 0
+    X_T = X.T
+
+    try:
+        theta = inv(X_T.dot(X) + _lambda * L).dot(X_T).dot(y)
     except LinAlgError:
         pass
 

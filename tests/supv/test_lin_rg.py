@@ -5,7 +5,8 @@ from numpy.testing import assert_allclose
 from numpy import ones, zeros, float64, array, append, genfromtxt
 
 from touvlo.supv.lin_rg import (normal_eqn, cost_func, reg_cost_func, grad,
-                                reg_grad, predict, h, LinearRegression)
+                                reg_grad, predict, h, LinearRegression,
+                                reg_normal_eqn)
 from touvlo.utils import numerical_grad
 
 TESTDATA1 = os.path.join(os.path.dirname(__file__), 'data1.csv')
@@ -33,7 +34,7 @@ class TestLinearRegression:
 
         y = data1[:, -1:]
         X = data1[:, :-1]
-        m, n = X.shape
+        m, _ = X.shape
         intercept = ones((m, 1), dtype=int)
         X = append(intercept, X, axis=1)
 
@@ -44,12 +45,50 @@ class TestLinearRegression:
     def test_normal_eqn_data2(self, data2):
         y = data2[:, -1:]
         X = data2[:, :-1]
-        m, n = X.shape
+        m, _ = X.shape
         intercept = ones((m, 1), dtype=int)
         X = append(intercept, X, axis=1)
 
         assert_allclose([[89597.909], [139.210], [-8738.019]],
                         normal_eqn(X, y),
+                        rtol=0, atol=0.001)
+
+    def test_reg_normal_eqn_data1_1(self, data1):
+
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        m, _ = X.shape
+        intercept = ones((m, 1), dtype=int)
+        X = append(intercept, X, axis=1)
+        _lambda = 0
+
+        assert_allclose([[-3.896], [1.193]],
+                        reg_normal_eqn(X, y, _lambda),
+                        rtol=0, atol=0.001)
+
+    def test_reg_normal_eqn_data1_2(self, data1):
+
+        y = data1[:, -1:]
+        X = data1[:, :-1]
+        m, _ = X.shape
+        intercept = ones((m, 1), dtype=int)
+        X = append(intercept, X, axis=1)
+        _lambda = 1
+
+        assert_allclose([[-3.889], [1.192]],
+                        reg_normal_eqn(X, y, _lambda),
+                        rtol=0, atol=0.001)
+
+    def test_reg_normal_eqn_data2(self, data2):
+        y = data2[:, -1:]
+        X = data2[:, :-1]
+        m, _ = X.shape
+        intercept = ones((m, 1), dtype=int)
+        X = append(intercept, X, axis=1)
+        _lambda = 100
+
+        assert_allclose([[74104.492], [135.249], [-1350.731]],
+                        reg_normal_eqn(X, y, _lambda),
                         rtol=0, atol=0.001)
 
 # COST FUNCTION
