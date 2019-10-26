@@ -160,9 +160,35 @@ def reg_normal_eqn(X, y, _lambda):
 
 
 class AbstractLinearRegression(ABC):
+    """Represents the definitons common to all Linear Regressions.
+
+    Args:
+        theta (numpy.array): Column vector of model's parameters.
+            Defaults to None
+
+    Attributes:
+        theta (numpy.array): Column vector of model's parameters.
+    """
 
     def __init__(self, theta=None):
         self.theta = theta
+
+    def _add_bias_term(self, X):
+        m = len(X)
+        intercept = ones((m, 1), dtype=int)
+        X = append(intercept, X, axis=1)
+        return X
+
+    def predict(self, X):
+        """Computes prediction vector.
+
+        Args:
+            X (numpy.array): Features' dataset.
+        Returns:
+            numpy.array: vector with a prediction for each example.
+        """
+        X = self._add_bias_term(X)
+        return predict(X, self.theta)
 
     @abstractmethod
     def _normal_fit(self, X, y):
@@ -174,7 +200,24 @@ class AbstractLinearRegression(ABC):
 
     def fit(self, X, y, strategy='BGD', alpha=0.1,
             num_iters=100, **kwargs):
+        """Adjusts model parameters to training data.
 
+        Args:
+            X (numpy.array): Features' dataset.
+            y (numpy.array): Column vector of expected values.
+            strategy (str) : Which optimization strategy should be employed:
+
+             * 'BGD': Performs Batch Gradient Descent
+             * 'SGD': Performs Stochastic Gradient Descent
+             * 'MBGD': Performs Mini-Batch Gradient Descent
+             * 'normal_equation': Employs Normal Equation
+            alpha (float): Learning rate or _step size of the optimization.
+            num_iters (int): Number of times the optimization will be
+                             performed.
+
+        Returns:
+            None
+        """
         if isinstance(strategy, str):
             if (strategy == 'BGD'):
                 self._gradient_fit(BGD, X, y, alpha, num_iters, **kwargs)
@@ -192,19 +235,18 @@ class AbstractLinearRegression(ABC):
 
 
 class LinearRegression(AbstractLinearRegression):
+    """Represents an Unregularized Linear Regression model
+
+    Args:
+        theta (numpy.array): Column vector of model's parameters.
+            Defaults to None
+
+    Attributes:
+        theta (numpy.array): Column vector of model's parameters.
+    """
 
     def __init__(self, theta=None):
         super().__init__(theta)
-
-    def _add_bias_term(self, X):
-        m = len(X)
-        intercept = ones((m, 1), dtype=int)
-        X = append(intercept, X, axis=1)
-        return X
-
-    def predict(self, X):
-        X = self._add_bias_term(X)
-        return predict(X, self.theta)
 
     def _normal_fit(self, X, y):
         X = self._add_bias_term(X)
@@ -221,24 +263,35 @@ class LinearRegression(AbstractLinearRegression):
                                   num_iters, **kwargs)
 
     def cost(self, X, y):
+        """Computes the cost function J for Linear Regression.
+
+        Args:
+            X (numpy.array): Features' dataset plus bias column.
+            y (numpy.array): Column vector of expected values.
+
+        Returns:
+            float: Computed cost.
+        """
         X = self._add_bias_term(X)
         return cost_func(X, y, self.theta)
 
 
 class RidgeLinearRegression(AbstractLinearRegression):
+    """Represents a Ridge Linear Regression model
+
+    Args:
+        theta (numpy.array): Column vector of model's parameters.
+            Defaults to None
+        _lambda (float): The regularization hyperparameter.
+
+    Attributes:
+        theta (numpy.array): Column vector of model's parameters.
+        _lambda (float): The regularization hyperparameter.
+    """
+
     def __init__(self, theta=None, _lambda=0):
         super().__init__(theta)
         self._lambda = _lambda
-
-    def _add_bias_term(self, X):
-        m = len(X)
-        intercept = ones((m, 1), dtype=int)
-        X = append(intercept, X, axis=1)
-        return X
-
-    def predict(self, X):
-        X = self._add_bias_term(X)
-        return predict(X, self.theta)
 
     def _normal_fit(self, X, y):
         X = self._add_bias_term(X)
@@ -255,5 +308,15 @@ class RidgeLinearRegression(AbstractLinearRegression):
                                   num_iters, _lambda=self._lambda, **kwargs)
 
     def cost(self, X, y, **kwargs):
+        """Computes the regularized cost function J for
+            Ridge Linear Regression.
+
+        Args:
+            X (numpy.array): Features' dataset plus bias column.
+            y (numpy.array): Column vector of expected values.
+
+        Returns:
+            float: Computed cost.
+        """
         X = self._add_bias_term(X)
         return reg_cost_func(X, y, self.theta, self._lambda, **kwargs)
