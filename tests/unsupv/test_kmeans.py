@@ -89,8 +89,10 @@ class TestKmeans:
         idx = array([[2], [1], [2], [0], [1], [2], [1], [0], [1], [2]])
         K = 4
 
-        assert_allclose(array([[5.16406 , 2.949155], [6.302333, 2.747548],
-                               [4.942665, 3.76044 ], [float('nan'), float('nan')]]),
+        assert_allclose(array([[5.16406, 2.949155],
+                               [6.302333, 2.747548],
+                               [4.942665, 3.76044],
+                               [float('nan'), float('nan')]]),
                         compute_centroids(X, idx, K),
                         rtol=0, atol=0.001, equal_nan=True)
 
