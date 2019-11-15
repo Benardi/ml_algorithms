@@ -1,7 +1,7 @@
 """
 .. module:: sgl_parm
     :synopsis: Provides routines to construct a Logistic Regression of
-    single parameter theta.
+        single parameter theta.
 
 .. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
 """

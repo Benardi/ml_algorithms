@@ -4,8 +4,8 @@ import pytest
 from numpy import ones, zeros, float64, array, append, isclose, genfromtxt
 from numpy.testing import assert_allclose
 
-from touvlo.supv.lgx_rg.sgl_parm import (cost_func, grad, predict_prob,
-                                         predict, h, reg_cost_func, reg_grad)
+from touvlo.lgx_rg.sgl_parm import (cost_func, grad, predict_prob,
+                                    predict, h, reg_cost_func, reg_grad)
 from touvlo.utils import numerical_grad
 
 TESTDATA3 = os.path.join(os.path.dirname(__file__), '../data3.csv')

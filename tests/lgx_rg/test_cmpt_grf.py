@@ -4,7 +4,7 @@ import pytest
 from numpy import ones, zeros, float64, array, isclose, genfromtxt
 from numpy.testing import assert_allclose
 
-from touvlo.supv.lgx_rg.cmpt_grf import cost_func, grad, predict, h
+from touvlo.lgx_rg.cmpt_grf import cost_func, grad, predict, h
 
 TESTDATA3 = os.path.join(os.path.dirname(__file__), '../data3.csv')
 TESTDATA4 = os.path.join(os.path.dirname(__file__), '../data4.csv')

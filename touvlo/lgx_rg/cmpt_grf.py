@@ -1,7 +1,7 @@
 """
 .. module:: cmpt_grf
     :synopsis: Provides routines to construct a Logistic Regression of
-    parameters w and b via computation graph.
+        parameters w and b via computation graph.
 
 .. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
 """
