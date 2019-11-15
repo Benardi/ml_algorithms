@@ -1,6 +1,7 @@
 """
-.. module:: lgx_rg
-    :synopsis: Provides routines to construct a Logistic Regression.
+.. module:: sgl_parm
+    :synopsis: Provides routines to construct a Logistic Regression of
+    single parameter theta.
 
 .. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
 """
