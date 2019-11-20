@@ -7,15 +7,15 @@
 
 from math import sqrt
 
-from numpy.random import uniform, seed, randn, squeeze
+from numpy.random import uniform, seed, randn
 from numpy import (float64, ones, append, dot, log, divide,
-                   power, zeros, reshape, empty)
+                   power, zeros, reshape, empty, squeeze)
 from numpy import sum as add
 
-from touvlo.utils import g, g_grad
+from touvlo.utils import sigmoid, sigmoid_backward, relu, relu_backward
 
 
-def initialize_parameters_deep(layer_dims, _seed=1):
+def init_params(layer_dims, _seed=1):
 
     seed(_seed)
     parameters = {}
@@ -41,7 +41,7 @@ def linear_activation_forward(A_prev, W, b, activation):
     if activation == "sigmoid":
         # Inputs: "A_prev, W, b". Outputs: "A, activation_cache".
         Z, linear_cache = linear_forward(A_prev, W, b)
-        A, activation_cache = g(Z)
+        A, activation_cache = sigmoid(Z)
 
     elif activation == "relu":
         # Inputs: "A_prev, W, b". Outputs: "A, activation_cache".
@@ -98,14 +98,6 @@ def linear_backward(dZ, cache):
     dA_prev = dot(W.T, dZ)
 
     return dA_prev, dW, db
-
-
-def relu_backward(dA, activation_cache):
-    pass
-
-
-def sigmoid_backward(dA, activation_cache):
-    pass
 
 
 def linear_activation_backward(dA, cache, activation):

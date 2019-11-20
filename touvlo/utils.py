@@ -5,7 +5,8 @@
 .. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
 """
 
-from numpy import zeros, copy, std, mean, float64, exp, seterr, where
+from numpy import (zeros, copy, std, mean, float64, exp, seterr,
+                   where, array, maximum)
 
 
 # sigmoid gradient function
@@ -31,7 +32,46 @@ def g_grad(x):
     Returns:
         obj: Sigmoid gradient at value.
     """
-    return g(x) * (1 - g(x))
+    s = g(x)
+    return s * (1 - s)
+
+
+def sigmoid(Z):
+    A = 1 / (1 + exp(-Z))
+    cache = Z
+    
+    return A, cache
+
+
+def relu(Z):   
+    A = maximum(0,Z)
+    
+    assert(A.shape == Z.shape)
+    
+    cache = Z 
+    return A, cache
+
+
+def relu_backward(dA, cache):   
+    Z = cache
+    dZ = array(dA, copy=True) # just converting dz to a correct object.
+    
+    # When z <= 0, you should set dz to 0 as well. 
+    dZ[Z <= 0] = 0
+    
+    assert (dZ.shape == Z.shape)
+    
+    return dZ
+
+def sigmoid_backward(dA, cache):  
+    Z = cache
+    
+    s = 1 / (1 + exp(-Z))
+    dZ = dA * s * (1-s)
+    
+    assert (dZ.shape == Z.shape)
+    
+    return dZ
 
 
 def BGD(X, y, grad, initial_theta,
