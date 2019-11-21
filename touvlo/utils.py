@@ -39,38 +39,39 @@ def g_grad(x):
 def sigmoid(Z):
     A = 1 / (1 + exp(-Z))
     cache = Z
-    
+
     return A, cache
 
 
-def relu(Z):   
-    A = maximum(0,Z)
-    
+def relu(Z):
+    A = maximum(0, Z)
+
     assert(A.shape == Z.shape)
-    
-    cache = Z 
+
+    cache = Z
     return A, cache
 
 
-def relu_backward(dA, cache):   
+def relu_backward(dA, cache):
     Z = cache
-    dZ = array(dA, copy=True) # just converting dz to a correct object.
-    
-    # When z <= 0, you should set dz to 0 as well. 
+    dZ = array(dA, copy=True)  # just converting dz to a correct object.
+
+    # When z <= 0, you should set dz to 0 as well.
     dZ[Z <= 0] = 0
-    
+
     assert (dZ.shape == Z.shape)
-    
+
     return dZ
 
-def sigmoid_backward(dA, cache):  
+
+def sigmoid_backward(dA, cache):
     Z = cache
-    
+
     s = 1 / (1 + exp(-Z))
-    dZ = dA * s * (1-s)
-    
+    dZ = dA * s * (1 - s)
+
     assert (dZ.shape == Z.shape)
-    
+
     return dZ
 
 

@@ -5,11 +5,8 @@
 .. moduleauthor:: Benardi Nunes <benardinunes@gmail.com>
 """
 
-from math import sqrt
-
-from numpy.random import uniform, seed, randn
-from numpy import (float64, ones, append, dot, log, divide,
-                   power, zeros, reshape, empty, squeeze)
+from numpy.random import seed, randn
+from numpy import (dot, log, divide, zeros, squeeze)
 from numpy import sum as add
 
 from touvlo.utils import sigmoid, sigmoid_backward, relu, relu_backward
@@ -116,26 +113,30 @@ def linear_activation_backward(dA, cache, activation):
 
 
 def L_model_backward(AL, Y, caches):
-    """
-    Implement the backward propagation for the [LINEAR->RELU] * (L-1) -> LINEAR -> SIGMOID group
-    """
     grads = {}
     L = len(caches)  # the number of layers
-    m = AL.shape[1]
     Y = Y.reshape(AL.shape)  # after this line, Y is the same shape as AL
 
     # Initializing the backpropagation
     dAL = - (divide(Y, AL) - divide(1 - Y, 1 - AL))
 
-    # Lth layer (SIGMOID -> LINEAR) gradients. Inputs: "dAL, current_cache". Outputs: "grads["dAL-1"], grads["dWL"], grads["dbL"]
+    # Lth layer (SIGMOID -> LINEAR) gradients.
+    # Inputs: "dAL, current_cache".
+    # Outputs: "grads["dAL-1"], grads["dWL"], grads["dbL"]
     current_cache = caches[L - 1]
-    grads["dA" + str(L - 1)], grads["dW" + str(L)], grads["db" + str(L)
-                                                          ] = linear_activation_backward(dAL, current_cache, "sigmoid")
+    (grads["dA" + str(L - 1)],
+     grads["dW" + str(L)],
+     grads["db" + str(L)]) = linear_activation_backward(dAL,
+                                                        current_cache,
+                                                        "sigmoid")
 
     # Loop from l=L-2 to l=0
     for l in reversed(range(L - 1)):
         # lth layer: (RELU -> LINEAR) gradients.
-        # Inputs: "grads["dA" + str(l + 1)], current_cache". Outputs: "grads["dA" + str(l)] , grads["dW" + str(l + 1)] , grads["db" + str(l + 1)]
+        # Inputs: "grads["dA" + str(l + 1)], current_cache".
+        # Outputs: "grads["dA" + str(l)] ,
+        #           grads["dW" + str(l + 1)],
+        #           grads["db" + str(l + 1)]
         current_cache = caches[l]
         dA_prev_temp, dW_temp, db_temp = linear_activation_backward(
             grads["dA" + str(l + 1)], current_cache, "relu")
@@ -152,8 +153,9 @@ def update_parameters(parameters, grads, learning_rate):
 
     # Update rule for each parameter. Use a for loop.
     for l in range(L):
-        parameters["W" + str(l + 1)] = parameters["W" + str(l + 1)] - \
-            learning_rate * grads["dW" + str(l + 1)]
-        parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - \
-            learning_rate * grads["db" + str(l + 1)]
+        parameters["W" + str(l + 1)] -= learning_rate * \
+            grads["dW" + str(l + 1)]
+        parameters["b" + str(l + 1)] -= learning_rate * \
+            grads["db" + str(l + 1)]
+
     return parameters

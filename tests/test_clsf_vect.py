@@ -1,13 +1,12 @@
-import pytest
 from numpy import array
-from numpy.testing import (assert_allclose, assert_almost_equal,
-                           assert_array_equal)
+from numpy.testing import assert_allclose
 
 from touvlo.nn_clsf_vect import (init_params, linear_forward,
                                  linear_activation_forward,
-                                 L_model_forward, compute_cost,
-                                 linear_backward,
-                                 linear_activation_backward)
+                                 L_model_forward, L_model_backward,
+                                 linear_backward, compute_cost,
+                                 linear_activation_backward,
+                                 update_parameters)
 
 
 class TestNeuralNetwork:
@@ -577,3 +576,166 @@ class TestNeuralNetwork:
         assert_allclose(db,
                         array([[-0.00912634]]),
                         rtol=0, atol=0.0001, equal_nan=False)
+
+    def test_L_model_backward1(self):
+        AL = array([[1.78862847, 0.43650985]])
+        Y_assess = array([[1, 0]])
+
+        A0 = array([[0.09649747, -1.8634927],
+                    [-0.2773882, -0.35475898],
+                    [-0.08274148, -0.62700068],
+                    [-0.04381817, -0.47721803]])
+        W1 = array([[-1.31386475, 0.88462238, 0.88131804, 1.70957306],
+                    [0.05003364, -0.40467741, -0.54535995, -1.54647732],
+                    [0.98236743, -1.10106763, -1.18504653, -0.2056499]])
+        b1 = array([[1.48614836], [0.23671627], [-1.02378514]])
+        Z1 = array([[-0.7129932, 0.62524497],
+                    [-0.16051336, -0.76883635],
+                    [-0.23003072, 0.74505627]])
+
+        A1 = array([[1.97611078, -1.24412333],
+                    [-0.62641691, -0.80376609],
+                    [-2.41908317, -0.92379202]])
+        W2 = array([[-1.02387576, 1.12397796, -0.13191423]])
+        b2 = array([[-1.62328545]])
+        Z2 = array([[0.64667545, -0.35627076]])
+
+        grads = L_model_backward(AL, Y_assess,
+                                 [((A0, W1, b1), Z1), ((A1, W2, b2), Z2)])
+
+        assert_allclose(
+            grads['dA0'],
+            array([[0., 0.52257901],
+                   [0., -0.3269206],
+                   [0., -0.32070404],
+                   [0., -0.74079187]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['dW1'],
+            array([[0.41010002, 0.07807203, 0.13798444, 0.10502167],
+                   [0., 0., 0., 0.],
+                   [0.05283652, 0.01005865, 0.01777766, 0.0135308]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['db1'],
+            array([[-0.22007063], [0.], [-0.02835349]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['dA1'],
+            array([[0.12913162, -0.44014127],
+                   [-0.14175655, 0.48317296],
+                   [0.01663708, -0.05670698]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['dW2'],
+            array([[-0.39202432, -0.13325855, -0.04601089]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['db2'],
+            array([[0.15187861]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+    def test_L_model_backward2(self):
+        AL = array([[-0.00588594, -0.00873882]])
+        Y_assess = array([[0, 1]])
+
+        A0 = array([[0.02971382, -2.24825777],
+                    [-0.26776186, 1.01318344],
+                    [0.85279784, 1.1081875],
+                    [1.11939066, 1.48754313]])
+        W1 = array([[-1.11830068, 0.84583341, -1.86088953, -0.6028851],
+                    [-1.91447204, 1.04814751, 1.33373782, -0.19741468],
+                    [1.77464503, -0.67472751, 0.15061687, 0.1529457]])
+        b1 = array([[-1.06419527], [0.43794661], [1.93897846]])
+        Z1 = array([[-1.02493087, 0.89933845],
+                    [-0.15450685, 1.7696273],
+                    [0.48378835, 0.6762164]])
+
+        A1 = array([[0.64316328, 0.24908671],
+                    [-1.3957635, 1.39166291],
+                    [-1.37066901, 0.23856319]])
+        W2 = array([[0.61407709, -0.83791227, 0.14506321]])
+        b2 = array([[1.16788229]])
+        Z2 = array([[-0.02410447, -0.88865742]])
+
+        grads = L_model_backward(AL, Y_assess,
+                                 [((A0, W1, b1), Z1), ((A1, W2, b2), Z2)])
+
+        assert_allclose(
+            grads['dA0'],
+            array([[6.39730387e-02, 2.77598463e+01],
+                   [-2.43228186e-02, -1.07915269e+01],
+                   [5.42949062e-03, -5.28896859e+01],
+                   [5.51344139e-03, -4.31481965e+00]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['dW1'],
+            array([[-16.31042648, 7.35033779, 8.03956335, 10.79167311],
+                   [22.25568547, -10.02958483, -10.97003769, -14.72530977],
+                   [-3.85247073, 1.73154152, 1.9145542, 2.56948923]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['db1'],
+            array([[7.25469593], [-9.89908088], [1.73179844]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['dA1'],
+            array([[0.15259879, 14.50939187],
+                   [-0.20822206, -19.79816175],
+                   [0.03604836, 3.42754853]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['dW2'],
+            array([[3.02261935, 16.26765683, 2.64807504]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            grads['db2'],
+            array([[11.93823295]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+    def test_update_parameters(self):
+        parameters = {}
+        parameters['W1'] = array([
+            [-0.41675785, -0.05626683, -2.1361961, 1.64027081],
+            [-1.79343559, -0.84174737, 0.50288142, -1.24528809],
+            [-1.05795222, -0.90900761, 0.55145404, 2.29220801]])
+        parameters['W2'] = array([[-0.5961597, -0.0191305, 1.17500122]])
+        parameters['W3'] = array([[-1.02378514, -0.7129932, 0.62524497],
+                                  [-0.16051336, -0.76883635, -0.23003072]])
+        parameters['b1'] = array([[0.04153939], [-1.11792545], [0.53905832]])
+        parameters['b2'] = array([[-0.74787095]])
+
+        grads = {}
+        grads['dW1'] = array([[1.78862847, 0.43650985,
+                               0.09649747, -1.8634927],
+                              [-0.2773882, -0.35475898,
+                               -0.08274148, -0.62700068],
+                              [-0.04381817, -0.47721803,
+                               -1.31386475, 0.88462238]])
+        grads['dW2'] = array([[-0.40467741, -0.54535995, -1.54647732]])
+        grads['db1'] = array([[0.88131804], [1.70957306], [0.05003364]])
+        grads['db2'] = array([[0.98236743]])
+
+        parameters = update_parameters(parameters, grads, 0.1)
+
+        assert_allclose(
+            parameters["W1"],
+            array([[-0.59562069, -0.09991781, -2.14584584, 1.82662008],
+                   [-1.76569676, -0.80627147, 0.51115557, -1.18258802],
+                   [-1.0535704, -0.86128581, 0.68284052, 2.20374577]]),
+            rtol=0, atol=0.0001, equal_nan=False)
+
+        assert_allclose(
+            parameters["W2"],
+            array([[-0.55569196, 0.0354055, 1.32964895]]),
+            rtol=0, atol=0.0001, equal_nan=False)
