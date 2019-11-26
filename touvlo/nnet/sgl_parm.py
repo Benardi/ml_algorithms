@@ -1,5 +1,5 @@
 """
-.. module:: nn_clsf
+.. module:: sgl_parm
     :synopsis: Provides routines to construct a Single Parameter based
         Classification Neural Network.
 

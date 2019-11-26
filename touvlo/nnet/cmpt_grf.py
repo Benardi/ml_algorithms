@@ -1,5 +1,5 @@
 """
-.. module:: nn_clsf_vect
+.. module:: cmpt_grf
     :synopsis: Provides routines to construct a Computation Graph based
         Classification Neural Network.
 

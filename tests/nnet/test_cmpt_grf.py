@@ -1,12 +1,12 @@
 from numpy import array
 from numpy.testing import assert_allclose
 
-from touvlo.nn_clsf_vect import (init_params, linear_forward,
-                                 linear_activation_forward,
-                                 L_model_forward, L_model_backward,
-                                 linear_backward, compute_cost,
-                                 linear_activation_backward,
-                                 update_parameters)
+from touvlo.nnet.cmpt_grf import (init_params, linear_forward,
+                                  linear_activation_forward,
+                                  L_model_forward, L_model_backward,
+                                  linear_backward, compute_cost,
+                                  linear_activation_backward,
+                                  update_parameters)
 
 
 class TestNeuralNetwork:
